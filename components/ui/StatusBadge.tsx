@@ -4,6 +4,7 @@ export type StatusType =
   | 'active'
   | 'available'
   | 'pending'
+  | 'confirmed'
   | 'en_route'
   | 'on_site'
   | 'in_progress'
@@ -25,6 +26,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, showDot = fals
     active: { class: 'badge-active', label: 'Active' },
     available: { class: 'badge-available', label: 'Available Now' },
     pending: { class: 'badge-pending', label: 'Pending Verification' },
+    confirmed: { class: 'badge-pending', label: 'Confirmed' },
     en_route: { class: 'badge-en-route', label: 'En Route' },
     on_site: { class: 'badge-on-site', label: 'On Site' },
     in_progress: { class: 'badge-active', label: 'In Progress' },
