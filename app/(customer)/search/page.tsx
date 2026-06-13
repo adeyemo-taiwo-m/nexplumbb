@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useMockDb, Artisan } from '@/lib/store/mockDb'
 import ArtisanCard from '@/components/ui/ArtisanCard'
 import Button from '@/components/ui/Button'

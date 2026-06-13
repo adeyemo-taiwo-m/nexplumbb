@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Search, MapPin, ShieldCheck, Lock, Star } from 'lucide-react'
+import { Search, MapPin, ShieldCheck, Lock, Star, ArrowRight } from 'lucide-react'
 import { useMockDb } from '@/lib/store/mockDb'
 import ArtisanCard from '@/components/ui/ArtisanCard'
 import Button from '@/components/ui/Button'
