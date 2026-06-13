@@ -135,7 +135,9 @@ export default function ArtisanRegistrationWizard() {
       bankName,
       accountNumber: accountNum,
       bvn: bvnVal,
-      nin: ninVal
+      nin: ninVal,
+      ninStatus: isNinVerified ? 'verified' : 'pending',
+      bvnStatus: bvnVal ? 'verified' : 'pending'
     })
 
     setStep(5) // show success screen
