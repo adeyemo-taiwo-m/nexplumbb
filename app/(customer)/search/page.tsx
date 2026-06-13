@@ -649,4 +649,3 @@ export default function SearchResultsPage() {
     </div>
   )
 }
-export default SearchResultsPage
