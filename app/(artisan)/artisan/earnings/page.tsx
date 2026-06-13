@@ -115,7 +115,9 @@ export default function ArtisanEarnings() {
         <div className="text-left font-mono text-[13px] leading-tight md:border-x md:border-border md:px-8 self-start h-full flex flex-col justify-start">
           <span className="text-slate flex items-center gap-1 mb-1">
             PENDING IN ESCROW 
-            <Info size={12} className="cursor-help" title="Released 24 hours after completion or upon customer release" />
+            <span className="cursor-help" title="Released 24 hours after completion or upon customer release">
+              <Info size={12} />
+            </span>
           </span>
           <span className="text-[28px] font-bold text-navy leading-none mt-1">
             {formatNaira(earningsPending)}
