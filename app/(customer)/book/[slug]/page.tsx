@@ -8,6 +8,7 @@ import { useAuthStore } from '@/lib/store/auth'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import EscrowBadge from '@/components/ui/EscrowBadge'
+import StarRating from '@/components/ui/StarRating'
 import { 
   ShieldCheck, 
   ChevronRight, 
@@ -23,7 +24,8 @@ import {
   Hash,
   Wallet,
   Copy,
-  Plus
+  Plus,
+  X
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatNaira } from '@/lib/format'

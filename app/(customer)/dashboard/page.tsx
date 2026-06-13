@@ -2,10 +2,12 @@
 
 import React, { useState, useMemo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { useAuthStore } from '@/lib/store/auth'
 import { useMockDb, Booking, Message } from '@/lib/store/mockDb'
 import DashboardSidebar from '@/components/layout/DashboardSidebar'
 import StatusBadge from '@/components/ui/StatusBadge'
+import StarRating from '@/components/ui/StarRating'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import { formatNaira, formatDate, formatTime, maskPhone } from '@/lib/format'

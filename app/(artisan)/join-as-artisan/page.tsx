@@ -10,6 +10,7 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import PhoneInput from '@/components/ui/PhoneInput'
 import { LAGOS_LGAS, NIGERIAN_BANKS } from '@/lib/validation'
+import StarRating from '@/components/ui/StarRating'
 import { 
   ShieldCheck, 
   ArrowLeft, 
