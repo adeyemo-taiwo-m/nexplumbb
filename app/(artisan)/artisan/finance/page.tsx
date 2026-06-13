@@ -10,7 +10,6 @@ import { formatNaira } from '@/lib/format'
 import { 
   Wallet, 
   TrendingUp, 
-  Tool, 
   CheckCircle2, 
   ArrowUpRight, 
   HelpCircle,
