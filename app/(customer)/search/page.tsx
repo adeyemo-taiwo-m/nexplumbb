@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useMockDb, Artisan } from '@/lib/store/mockDb'
@@ -21,7 +21,7 @@ import {
 } from 'lucide-react'
 import { LAGOS_LGAS } from '@/lib/validation'
 
-export default function SearchResultsPage() {
+function SearchResultsPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const artisans = useMockDb((state) => state.artisans)
@@ -648,5 +648,13 @@ export default function SearchResultsPage() {
         </>
       )}
     </div>
+  )
+}
+
+export default function SearchResultsPage() {
+  return (
+    <Suspense fallback={<div className="w-full h-screen bg-lgray flex items-center justify-center font-mono text-navy">Loading search results...</div>}>
+      <SearchResultsPageContent />
+    </Suspense>
   )
 }

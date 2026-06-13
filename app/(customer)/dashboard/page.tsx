@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/lib/store/auth'
@@ -24,7 +24,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
-export default function CustomerDashboard() {
+function CustomerDashboardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const tab = searchParams.get('tab') || 'overview'
@@ -590,5 +590,13 @@ export default function CustomerDashboard() {
       )}
 
     </div>
+  )
+}
+
+export default function CustomerDashboard() {
+  return (
+    <Suspense fallback={<div className="w-full h-screen bg-lgray flex items-center justify-center font-mono text-navy">Loading dashboard portal...</div>}>
+      <CustomerDashboardContent />
+    </Suspense>
   )
 }
