@@ -379,4 +379,3 @@ export default function CustomerHomepage() {
     </div>
   )
 }
-export default CustomerHomepage
