@@ -179,7 +179,7 @@ export default function PriceEstimatorPage() {
                 </div>
                 <div className="flex flex-col items-center -translate-x-1/2 left-1/2 absolute">
                   <span className="text-teal font-extrabold text-[12px] flex items-center gap-0.5">
-                    Typical: {formatNaira(estimate.typical)} <Info size={10} className="text-slate cursor-help" title="Most common price on the platform" />
+                    Typical: {formatNaira(estimate.typical)} <span className="cursor-help text-slate" title="Most common price on the platform"><Info size={10} className="inline ml-0.5" /></span>
                   </span>
                   <div className="h-3 w-1.5 bg-teal mt-1" />
                 </div>
