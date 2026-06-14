@@ -1,69 +1,50 @@
 import React, { useId, useState } from 'react'
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  /** Visible label above the input */
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  /** Visible label above the textarea */
   label?: string
   /** Error message – turns border red */
   error?: string
-  /** Helper text below the input */
+  /** Helper text below the textarea */
   hint?: string
-  /** Static prefix text inside the field (e.g. ₦, +234) */
-  prefixText?: string
-  /** Icon or button rendered inside the right side of the field */
-  suffixIcon?: React.ReactNode
-  /** Icon rendered inside the left side of the field */
-  prefixIcon?: React.ReactNode
-  /** Visual size variant */
-  inputSize?: 'sm' | 'md' | 'lg'
   /** Full-width override */
   fullWidth?: boolean
   /** Optional wrapper className */
   wrapperClassName?: string
 }
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   (
     {
       label,
       error,
       hint,
-      prefixText,
-      suffixIcon,
-      prefixIcon,
-      inputSize = 'md',
       fullWidth = true,
       wrapperClassName = '',
       className = '',
-      type = 'text',
       id,
       disabled,
       onFocus,
       onBlur,
+      rows = 4,
       ...props
     },
     ref
   ) => {
     const defaultId = useId()
-    const inputId = id || defaultId
-    const errorId = `${inputId}-error`
-    const hintId = `${inputId}-hint`
+    const textareaId = id || defaultId
+    const errorId = `${textareaId}-error`
+    const hintId = `${textareaId}-hint`
     const [focused, setFocused] = useState(false)
 
-    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
       setFocused(true)
       onFocus?.(e)
     }
 
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
       setFocused(false)
       onBlur?.(e)
-    }
-
-    /* ── Size tokens ── */
-    const sizes = {
-      sm: 'h-9 text-[12px]',
-      md: 'h-12 text-[14px]',
-      lg: 'h-14 text-[15px]',
     }
 
     /* ── Border state ── */
@@ -76,16 +57,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     /* ── Disabled state ── */
     const disabledStyles = disabled ? 'opacity-50 cursor-not-allowed bg-lgray' : 'bg-white'
 
-    /* ── Padding calculation ── */
-    const leftPad = prefixIcon ? 'pl-11' : prefixText ? 'pl-[70px]' : 'pl-4'
-    const rightPad = suffixIcon ? 'pr-11' : 'pr-4'
-
     return (
       <div className={`${fullWidth ? 'w-full' : ''} ${wrapperClassName}`}>
         {/* Label */}
         {label && (
           <label
-            htmlFor={inputId}
+            htmlFor={textareaId}
             className={`block font-mono text-[11px] font-bold uppercase tracking-wider mb-1.5 transition-colors duration-150 select-none ${
               error ? 'text-red-600' : focused ? 'text-teal' : 'text-slate'
             }`}
@@ -94,28 +71,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
 
-        {/* Input container */}
-        <div className="relative flex items-center group">
-          {/* Left prefix text */}
-          {prefixText && (
-            <div className="absolute left-4 font-mono text-[13px] text-slate border-r border-border pr-2.5 flex items-center h-full pointer-events-none select-none z-[1]">
-              {prefixText}
-            </div>
-          )}
-
-          {/* Left prefix icon */}
-          {prefixIcon && (
-            <div className={`absolute left-3.5 flex items-center pointer-events-none transition-colors duration-150 z-[1] ${
-              error ? 'text-red-400' : focused ? 'text-teal' : 'text-slate/60'
-            }`}>
-              {prefixIcon}
-            </div>
-          )}
-
-          <input
-            id={inputId}
-            type={type}
+        {/* Textarea container */}
+        <div className="relative group">
+          <textarea
+            id={textareaId}
             ref={ref}
+            rows={rows}
             disabled={disabled}
             aria-invalid={!!error}
             aria-describedby={error ? errorId : hint ? hintId : undefined}
@@ -123,14 +84,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             onBlur={handleBlur}
             className={[
               // Base
-              'w-full rounded-btn border font-mono text-body transition-all duration-200 ease-out',
+              'w-full rounded-btn border font-mono text-[14px] text-body transition-all duration-200 ease-out',
               'placeholder:text-slate/50 placeholder:font-mono',
-              'focus:outline-none',
-              // Size
-              sizes[inputSize],
-              // Padding
-              leftPad,
-              rightPad,
+              'focus:outline-none resize-y p-4',
               // Border state
               borderState,
               // Disabled
@@ -140,15 +96,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ].join(' ')}
             {...props}
           />
-
-          {/* Right suffix icon */}
-          {suffixIcon && (
-            <div className={`absolute right-3.5 flex items-center pointer-events-auto transition-colors duration-150 ${
-              error ? 'text-red-400' : focused ? 'text-teal' : 'text-slate/60'
-            }`}>
-              {suffixIcon}
-            </div>
-          )}
 
           {/* Animated bottom highlight bar */}
           <span
@@ -184,5 +131,5 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   }
 )
 
-Input.displayName = 'Input'
-export default Input
+Textarea.displayName = 'Textarea'
+export default Textarea
