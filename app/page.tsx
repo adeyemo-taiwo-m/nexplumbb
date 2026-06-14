@@ -219,7 +219,7 @@ export default function Homepage() {
               {/* H1 Headline */}
               <h1 className="font-display font-bold text-[44px] tablet:text-[54px] text-white leading-tight animate-fade-in-up delay-100">
                 Your trusted artisan, <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal via-nxblue to-orange">
+                <span className="text-orange">
                   one tap away
                 </span>
               </h1>
