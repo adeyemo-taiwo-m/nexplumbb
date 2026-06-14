@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { Search } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Search } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 interface HeroSearchBarProps {
   searchQuery: string;
@@ -9,7 +9,11 @@ interface HeroSearchBarProps {
   handleSearch: (e: React.FormEvent) => void;
 }
 
-export default function HeroSearchBar({ searchQuery, setSearchQuery, handleSearch }: HeroSearchBarProps) {
+export default function HeroSearchBar({
+  searchQuery,
+  setSearchQuery,
+  handleSearch,
+}: HeroSearchBarProps) {
   return (
     <form
       onSubmit={handleSearch}
@@ -17,12 +21,13 @@ export default function HeroSearchBar({ searchQuery, setSearchQuery, handleSearc
     >
       <div className="flex-1 flex items-center gap-2 px-3">
         <Search size={18} className="text-slate" />
+
         <input
           type="text"
           placeholder="What do you need? e.g. leaking pipe, electrical fault..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-transparent text-body font-mono text-[14px] placeholder:text-slate focus:outline-none"
+          className="w-full bg-transparent text-body font-mono text-[14px] placeholder:text-slate !outline-none border-0 ring-0"
           required
         />
       </div>
@@ -35,5 +40,5 @@ export default function HeroSearchBar({ searchQuery, setSearchQuery, handleSearc
         Search
       </Button>
     </form>
-  )
+  );
 }
