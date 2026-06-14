@@ -140,18 +140,18 @@ function SearchResultsPageContent() {
       {/* Sub Header Search Controls bar */}
       <section className="bg-white border-b border-border py-4 px-6 tablet:px-10 z-40 sticky top-16">
         <form onSubmit={handleApplySearch} className="max-w-[1200px] mx-auto flex flex-col md:flex-row gap-3">
-          <div className="flex-1 flex items-center border border-border rounded-btn bg-lgray/30 px-3">
+          <div className="flex-1 flex items-center border border-border rounded-btn bg-lgray/30 px-3 focus-within:border-teal focus-within:ring-2 focus-within:ring-teal/20 transition-all">
             <SearchIcon size={18} className="text-slate flex-shrink-0" />
             <input
               type="text"
               placeholder="What trade do you need? e.g. leak, socket, cabinet..."
               value={searchVal}
               onChange={(e) => setSearchVal(e.target.value)}
-              className="w-full bg-transparent border-0 py-2.5 px-2 text-body font-mono text-[14px] focus:outline-none"
+              className="w-full bg-transparent border-0 py-2.5 px-2 text-body font-mono text-[14px] focus:outline-none focus-visible:!outline-none"
             />
           </div>
 
-          <div className="w-full md:w-56 flex items-center border border-border rounded-btn bg-lgray/30 px-3">
+          <div className="w-full md:w-56 flex items-center border border-border rounded-btn bg-lgray/30 px-3 focus-within:border-teal focus-within:ring-2 focus-within:ring-teal/20 transition-all">
             <MapPin size={18} className="text-orange flex-shrink-0" />
             <select
               value={selectedLocation.split(',')[0]}
@@ -159,7 +159,7 @@ function SearchResultsPageContent() {
                 const val = e.target.value
                 setSelectedLocation(val === 'Lagos' ? 'Lagos' : `${val}, Lagos`)
               }}
-              className="w-full bg-transparent border-0 py-2.5 px-2 text-body font-mono text-[13px] focus:outline-none cursor-pointer"
+              className="w-full bg-transparent border-0 py-2.5 px-2 text-body font-mono text-[13px] focus:outline-none focus-visible:!outline-none cursor-pointer"
             >
               <option value="Lagos">All Lagos</option>
               {LAGOS_LGAS.map((lga) => (

@@ -12,6 +12,12 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
         prefixText="🇳🇬 +234 |"
         ref={ref}
         type="tel"
+        inputMode="tel"
+        autoComplete="tel"
+        onInput={(e) => {
+          // Prevent typing or pasting letters/emails
+          e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
+        }}
         {...props}
       />
     )

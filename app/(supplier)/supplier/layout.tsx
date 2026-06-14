@@ -4,6 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Store, Package, ShoppingBag, UserCheck } from 'lucide-react'
+import Logo from '@/components/ui/Logo'
 
 export default function SupplierLayout({
   children,
@@ -24,8 +25,9 @@ export default function SupplierLayout({
       {/* Supplier Top Navigation */}
       <header className="h-16 bg-navy text-white px-6 tablet:px-10 flex items-center justify-between border-b border-white/5 sticky top-0 z-30 select-none">
         <div className="flex items-center gap-8">
-          <Link href="/" className="font-display font-bold text-[20px]">
-            Nex<span className="text-orange">Plumb</span> <span className="text-[11px] font-mono text-slate bg-teal/20 text-teal px-1.5 py-0.5 rounded ml-1 uppercase font-bold">Materials Merchant</span>
+          <Link href="/" className="flex items-center">
+            <Logo size={24} variant="light" showText={true} />
+            <span className="text-[11px] font-mono text-slate bg-teal/20 text-teal px-1.5 py-0.5 rounded ml-2 uppercase font-bold">Materials Merchant</span>
           </Link>
           
           {/* Main Links */}

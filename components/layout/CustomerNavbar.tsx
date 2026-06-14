@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/store/auth'
 import Button from '../ui/Button'
+import Logo from '../ui/Logo'
 import { Menu, X, LogOut, User, LayoutDashboard, Settings } from 'lucide-react'
 
 export const CustomerNavbar: React.FC = () => {
@@ -41,11 +42,8 @@ export const CustomerNavbar: React.FC = () => {
       <div className="max-w-[1200px] mx-auto h-full px-6 tablet:px-10 flex items-center justify-between">
         
         {/* LOGO */}
-        <Link href="/" className="flex items-center gap-1.5 focus-visible:outline-none select-none">
-          <span className="font-display font-bold text-[22px] tracking-tight">
-            <span className={isScrolled ? 'text-navy' : 'text-white'}>Nex</span>
-            <span className="text-orange">Plumb</span>
-          </span>
+        <Link href="/" className="flex items-center focus-visible:outline-none select-none">
+          <Logo size={28} variant={isScrolled ? 'dark' : 'light'} showText={true} />
         </Link>
 
         {/* DESKTOP NAV */}

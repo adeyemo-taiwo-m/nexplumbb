@@ -11,6 +11,7 @@ import Input from '@/components/ui/Input'
 import PhoneInput from '@/components/ui/PhoneInput'
 import Button from '@/components/ui/Button'
 import OtpInput from '@/components/ui/OtpInput'
+import Logo from '@/components/ui/Logo'
 import { useAuthStore } from '@/lib/store/auth'
 import { useMockDb } from '@/lib/store/mockDb'
 import { toast } from 'sonner'
@@ -174,9 +175,7 @@ export default function CustomerSignUp() {
         {/* Content */}
         <div className="relative z-10 flex flex-col h-full justify-between">
           <div>
-            <span className="font-display font-bold text-[24px] tracking-tight text-white select-none drop-shadow-md">
-              Nex<span className="text-orange">Plumb</span>
-            </span>
+            <Logo size={28} variant="light" showText={true} />
             <h2 className="font-display font-bold text-[32px] text-white leading-tight mt-20 max-w-[340px]">
               Join thousands of Lagos residents who book trusted artisans securely.
             </h2>

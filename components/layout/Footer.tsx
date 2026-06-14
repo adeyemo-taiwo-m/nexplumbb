@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, ShieldCheck } from 'lucide-react'
+import Logo from '../ui/Logo'
 
 export const Footer: React.FC = () => {
   return (
@@ -12,9 +13,7 @@ export const Footer: React.FC = () => {
           
           {/* Col 1: Brand Info */}
           <div className="flex flex-col gap-4">
-            <span className="font-display font-bold text-[22px] tracking-tight">
-              Nex<span className="text-orange">Plumb</span>
-            </span>
+            <Logo size={28} variant="light" showText={true} />
             <p className="font-body text-[14px] text-slate-light opacity-80 leading-relaxed max-w-[240px]">
               Nigeria\'s trust-first artisan marketplace. Connecting urban residents to vetted, insured professionals through secure escrow.
             </p>

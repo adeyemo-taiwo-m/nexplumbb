@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/store/auth'
 import { useMockDb } from '@/lib/store/mockDb'
+import Logo from '../ui/Logo'
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -55,8 +56,9 @@ export const AdminSidebar: React.FC = () => {
       
       {/* Admin Title */}
       <div className="h-16 px-6 border-b border-white/10 flex items-center">
-        <Link href="/" className="font-display font-bold text-[18px] tracking-tight">
-          Nex<span className="text-orange">Plumb</span> <span className="text-[10px] font-mono text-slate bg-red-950 text-red-400 border border-red-900 px-1.5 py-0.5 rounded ml-1 uppercase">Admin</span>
+        <Link href="/" className="flex items-center">
+          <Logo size={24} variant="light" showText={true} />
+          <span className="text-[10px] font-mono text-slate bg-red-950 text-red-400 border border-red-900 px-1.5 py-0.5 rounded ml-2 uppercase font-bold">Admin</span>
         </Link>
       </div>
 
