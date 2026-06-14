@@ -76,7 +76,7 @@ export default function SocialProof() {
         </div>
 
         {/* Featured Quote */}
-        <div className="bg-navy rounded-card p-10 tablet:p-14 mx-auto max-w-[760px] mt-14 relative overflow-hidden">
+        <div className="bg-navy rounded-card p-10 tablet:p-14 mt-14 relative overflow-hidden w-full">
           {/* Decorative gradient glow */}
           <div className="absolute -top-20 -right-20 w-[300px] h-[300px] bg-orange/10 rounded-full blur-[80px] pointer-events-none" />
           <div className="absolute -bottom-20 -left-20 w-[200px] h-[200px] bg-teal/5 rounded-full blur-[60px] pointer-events-none" />
@@ -95,7 +95,7 @@ export default function SocialProof() {
             />
           </svg>
 
-          <blockquote className="text-white text-[17px] tablet:text-[19px] leading-[1.8] font-medium italic relative z-10">
+          <blockquote className="text-white text-[17px] tablet:text-[19px] leading-[1.8] font-medium italic relative z-10 max-w-[720px]">
             &ldquo;I paid a plumber from the roadside ₦8,000 to fix my bathroom pipe. He
             collected the money and made it worse. On Nexplumb, I paid ₦6,500, watched the
             plumber arrive on the map, and he fixed it in 45 minutes. That was six months ago.
