@@ -40,6 +40,7 @@ export default function CustomerLogin() {
   const [resetPhone, setResetPhone] = useState('')
   const [resetOtpVal, setResetOtpVal] = useState('')
   const [resetNewPass, setResetNewPass] = useState('')
+  const [resetConfirmPass, setResetConfirmPass] = useState('')
   const [resetError, setResetError] = useState('')
 
   const {
@@ -155,8 +156,8 @@ export default function CustomerLogin() {
 
     if (newAttempts >= 5) {
       setIsLocked(true)
-      setLockoutTimer(60) // 1 minute mock lockout (specs say 10 min, but 1 min is test-friendly!)
-      setErrorMessage('Account temporarily locked. Try again in 60 seconds.')
+      setLockoutTimer(600) // 10 minutes mock lockout
+      setErrorMessage('Account temporarily locked. Try again in 10 minutes.')
     } else {
       setErrorMessage('Incorrect phone number or password. Please try again.')
     }
@@ -187,9 +188,24 @@ export default function CustomerLogin() {
       setResetError('Password must be at least 8 characters')
       return
     }
+    if (resetNewPass !== resetConfirmPass) {
+      setResetError("Passwords don't match")
+      return
+    }
     setResetError('')
-    toast.success('Password updated successfully! Please log in.')
-    setFlow('login')
+    
+    // Auto-login on successful reset
+    setUser({
+      id: 'cust_1',
+      type: 'customer',
+      firstName: 'Chisom',
+      name: 'Chisom Alabi',
+      phone: resetPhone || '+2348080908908',
+      isVerified: true
+    })
+    setToken('mock-customer-token')
+    toast.success('Password reset successful! Welcome to your dashboard.')
+    router.push('/dashboard')
   }
 
   const handleAutofillDemo = (type: 'customer' | 'artisan' | 'admin') => {
@@ -416,11 +432,13 @@ export default function CustomerLogin() {
           )}
 
           {flow === 'reset-new' && (
-            <div className="flex flex-col">
-              <h2 className="text-h2 text-navy mb-2">New Password</h2>
-              <p className="font-body text-[14px] text-slate mb-6">
-                Choose a strong new password for your account.
-              </p>
+            <div className="flex flex-col gap-4">
+              <div>
+                <h2 className="text-h2 text-navy mb-2">New Password</h2>
+                <p className="font-body text-[14px] text-slate">
+                  Choose a strong new password for your account.
+                </p>
+              </div>
 
               {resetError && <p className="font-mono text-[12px] text-red-600 mb-2">{resetError}</p>}
 
@@ -432,7 +450,15 @@ export default function CustomerLogin() {
                 onChange={(e) => setResetNewPass(e.target.value)}
               />
 
-              <div className="mt-6">
+              <Input
+                label="Confirm New Password"
+                type="password"
+                placeholder="Confirm password"
+                value={resetConfirmPass}
+                onChange={(e) => setResetConfirmPass(e.target.value)}
+              />
+
+              <div className="mt-2">
                 <Button variant="primary" onClick={handleUpdatePassword} className="w-full">
                   Update Password
                 </Button>
