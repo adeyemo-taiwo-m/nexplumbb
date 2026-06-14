@@ -628,7 +628,7 @@ export default function Homepage() {
                     className="flex flex-col items-start p-6 rounded-card border border-border bg-lgray/10 hover:border-teal/30 hover:shadow-card transition-all duration-200"
                   >
                     {/* Icon & Number Header */}
-                    <div className="flex items-center gap-4 mb-6">
+                    <div className="flex items-center justify-between w-full mb-6">
                       {/* Icon */}
                       <Icon size={40} className="text-teal" />
                       {/* Circle Number */}
