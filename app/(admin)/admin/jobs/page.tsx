@@ -6,6 +6,7 @@ import { useAuthStore } from '@/lib/store/auth'
 import StatusBadge from '@/components/ui/StatusBadge'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
+import Input from '@/components/ui/Input'
 import { formatNaira } from '@/lib/format'
 import { 
   Search, 
@@ -109,14 +110,12 @@ export default function AdminJobsTable() {
       <div className="bg-white rounded-card border border-border p-4 shadow-card flex flex-col md:flex-row justify-between gap-4">
         
         {/* Search Input */}
-        <div className="relative flex-1 max-w-md">
-          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate" />
-          <input
-            type="text"
+        <div className="flex-1 max-w-md">
+          <Input
             placeholder="Search reference, customer, artisan, or trade..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="h-12 w-full rounded-btn border border-border bg-white pl-11 pr-4 font-mono text-[13px] text-body placeholder:text-slate focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+            prefixIcon={<Search size={18} />}
           />
         </div>
 

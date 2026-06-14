@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react'
 import { useAuthStore } from '@/lib/store/auth'
 import { useMockDb, Transaction } from '@/lib/store/mockDb'
 import Button from '@/components/ui/Button'
+import Input from '@/components/ui/Input'
 import Modal from '@/components/ui/Modal'
 import { formatNaira, formatDate, calculateCommission } from '@/lib/format'
 import { 
@@ -245,17 +246,15 @@ export default function ArtisanEarnings() {
             </p>
 
             <div>
-              <label className="font-mono text-[11px] font-bold text-slate mb-1 block uppercase">Amount to withdraw (₦)</label>
-              <input
+              <Input
+                label="Amount to withdraw (₦)"
                 type="number"
+                prefixText="₦"
                 value={withdrawAmount === 0 ? '' : withdrawAmount}
                 placeholder="e.g. 5000"
                 onChange={(e) => setWithdrawAmount(parseInt(e.target.value) || 0)}
-                className="h-12 w-full rounded-btn border border-border px-4 font-mono text-[14px]"
+                error={withdrawAmount > earningsAvailable ? 'Exceeds available balance' : undefined}
               />
-              {withdrawAmount > earningsAvailable && (
-                <p className="text-red-600 text-[11px] mt-1 font-bold">Error: Exceeds available balance</p>
-              )}
             </div>
           </div>
         </Modal>

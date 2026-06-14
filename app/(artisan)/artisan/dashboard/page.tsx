@@ -7,6 +7,7 @@ import { useAuthStore } from '@/lib/store/auth'
 import { useMockDb, Booking } from '@/lib/store/mockDb'
 import StatusBadge from '@/components/ui/StatusBadge'
 import Button from '@/components/ui/Button'
+import Input from '@/components/ui/Input'
 import Modal from '@/components/ui/Modal'
 import { formatNaira } from '@/lib/format'
 import { 
@@ -254,12 +255,12 @@ export default function ArtisanDashboard() {
             </div>
             
             <div>
-              <label className="font-mono text-[11px] font-bold text-slate mb-1 block uppercase">Your Counter Quote Rate</label>
-              <input
+              <Input
+                label="Your Counter Quote Rate"
                 type="number"
+                prefixText="₦"
                 value={counterPrice}
                 onChange={(e) => setCounterPrice(parseInt(e.target.value) || 0)}
-                className="h-12 w-full rounded-btn border border-border px-4 font-mono text-[14px]"
               />
             </div>
           </div>

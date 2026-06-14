@@ -7,6 +7,7 @@ import StatusBadge from '@/components/ui/StatusBadge'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import { formatNaira } from '@/lib/format'
+import Input from '@/components/ui/Input'
 import { 
   Search, 
   User, 
@@ -158,14 +159,13 @@ export default function AdminUsersDesk() {
         </div>
 
         {/* Search */}
-        <div className="relative w-full md:w-80">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate" />
-          <input
-            type="text"
+        <div className="w-full md:w-80">
+          <Input
             placeholder={activeTab === 'artisan' ? "Search name, trade, LGA..." : "Search name, phone..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="h-10 w-full rounded-btn border border-border bg-white pl-9 pr-4 font-mono text-[12px] text-body placeholder:text-slate focus:outline-none focus:border-teal"
+            prefixIcon={<Search size={16} />}
+            inputSize="sm"
           />
         </div>
 

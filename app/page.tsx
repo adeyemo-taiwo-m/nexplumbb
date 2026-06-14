@@ -136,25 +136,25 @@ export default function Homepage() {
               {/* Search Panel */}
               <form onSubmit={handleSearch} className="w-full max-w-[620px] glass-card rounded-modal mt-8 p-3 animate-fade-in-up delay-300">
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <div className="flex-1 flex items-center gap-2.5 bg-white/10 rounded-card px-4 py-3 border border-white/10 focus-within:border-teal/40 transition-colors">
+                  <div className="flex-1 flex items-center gap-2.5 bg-white/10 rounded-card px-4 py-3 border border-white/10 focus-within:bg-white/15 transition-colors">
                     <Search size={18} className="text-white/50 flex-shrink-0" />
                     <input
                       type="text"
                       placeholder="What do you need? e.g. leaking pipe..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-transparent text-white font-mono text-[13px] focus:outline-none placeholder:text-white/40"
+                      className="w-full bg-transparent text-white font-mono text-[13px] focus:outline-none focus-visible:!outline-none placeholder:text-white/40"
                       required
                     />
                   </div>
-                  <div className="flex items-center gap-2 bg-white/10 rounded-card px-4 py-3 border border-white/10 sm:w-40 focus-within:border-orange/40 transition-colors">
+                  <div className="flex items-center gap-2 bg-white/10 rounded-card px-4 py-3 border border-white/10 sm:w-40 focus-within:bg-white/15 transition-colors">
                     <MapPin size={16} className="text-orange flex-shrink-0" />
                     <input
                       type="text"
                       placeholder="Area / LGA"
                       value={customLocation}
                       onChange={(e) => setCustomLocation(e.target.value)}
-                      className="w-full bg-transparent text-white font-mono text-[13px] focus:outline-none placeholder:text-white/40"
+                      className="w-full bg-transparent text-white font-mono text-[13px] focus:outline-none focus-visible:!outline-none placeholder:text-white/40"
                     />
                   </div>
                   <Button type="submit" variant="primary" size="md" className="w-full sm:w-28 flex-shrink-0">

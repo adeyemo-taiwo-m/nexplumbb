@@ -9,6 +9,8 @@ import DashboardSidebar from '@/components/layout/DashboardSidebar'
 import StatusBadge from '@/components/ui/StatusBadge'
 import StarRating from '@/components/ui/StarRating'
 import Button from '@/components/ui/Button'
+import Input from '@/components/ui/Input'
+import Textarea from '@/components/ui/Textarea'
 import Modal from '@/components/ui/Modal'
 import { formatNaira, formatDate, formatTime, maskPhone } from '@/lib/format'
 import { 
@@ -443,12 +445,12 @@ function CustomerDashboardContent() {
 
                       {/* Chat Input form */}
                       <form onSubmit={handleSendMessage} className="p-3 border-t border-border bg-white flex gap-2">
-                        <input
-                          type="text"
+                        <Input
                           placeholder="Type your message to Emeka here..."
                           value={chatText}
                           onChange={(e) => setChatText(e.target.value)}
-                          className="flex-1 border border-border rounded-btn px-4 font-mono text-[13px] focus:outline-none focus:border-teal"
+                          inputSize="sm"
+                          className="flex-1"
                         />
                         <Button type="submit" variant="primary" size="sm" className="h-10 px-4 shrink-0">
                           <Send size={16} />
@@ -576,13 +578,12 @@ function CustomerDashboardContent() {
             </div>
 
             <div>
-              <label className="font-mono text-[11px] font-bold text-slate mb-1 block uppercase">Review Comments (Optional)</label>
-              <textarea
+              <Textarea
+                label="Review Comments (Optional)"
                 placeholder="Share your experience working with Emeka on pipe fixes..."
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
                 rows={4}
-                className="w-full rounded-btn border border-border bg-white px-4 py-3 focus:outline-none focus:border-teal font-mono text-[13px]"
               />
             </div>
           </div>

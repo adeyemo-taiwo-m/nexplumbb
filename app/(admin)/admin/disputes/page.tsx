@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react'
 import { useMockDb, Dispute } from '@/lib/store/mockDb'
 import StatusBadge from '@/components/ui/StatusBadge'
 import Button from '@/components/ui/Button'
+import Textarea from '@/components/ui/Textarea'
 import { formatNaira } from '@/lib/format'
 import { 
   AlertTriangle, 
@@ -366,13 +367,12 @@ export default function AdminDisputesArbitration() {
 
                   {/* Reason text area */}
                   <div>
-                    <label className="font-mono text-[11px] font-bold text-slate mb-1 block uppercase">Arbitration Rationale (Compliance logs requirements)</label>
-                    <textarea
+                    <Textarea
+                      label="Arbitration Rationale (Compliance logs requirements)"
                       placeholder="Specify reasoning based on uploaded photo proofs, timeline tracking, or contact logs..."
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
                       rows={3}
-                      className="w-full rounded-btn border border-border bg-white px-4 py-3 font-mono text-[13px] focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20"
                     />
                   </div>
 
