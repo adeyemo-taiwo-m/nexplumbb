@@ -5,6 +5,9 @@ import AppInitializer from "@/components/layout/AppInitializer";
 export const metadata: Metadata = {
   title: "NexPlumb — Your Vetted Artisan, One Tap Away in Lagos",
   description: "Find verified, NIN-checked plumbers, electricians, carpenters and painters near you in Lagos. Secure escrow payments, real-time GPS tracking and quality guaranteed.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
