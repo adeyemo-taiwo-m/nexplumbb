@@ -239,7 +239,7 @@ export default function Homepage() {
               {/* Search Bar (White Card style) */}
               <form
                 onSubmit={handleSearch}
-                className="w-full max-w-[640px] bg-white rounded-card shadow-modal mt-10 p-2 flex gap-2 items-center relative animate-fade-in-up delay-300"
+                className="w-full max-w-[640px] bg-white rounded-card shadow-modal mt-10 p-2 flex gap-2 items-center relative animate-fade-in-up delay-300 border border-transparent focus-within:border-teal focus-within:shadow-[0_0_0_3px_rgba(42,157,143,0.12)] transition-all duration-200"
               >
                 <div className="flex-1 flex items-center gap-2 px-3">
                   <Search size={18} className="text-slate" />
@@ -248,7 +248,7 @@ export default function Homepage() {
                     placeholder="What do you need? e.g. leaking pipe, electrical fault..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-transparent text-body font-mono text-[14px] focus:outline-none placeholder:text-slate"
+                    className="w-full bg-transparent text-body font-mono text-[14px] placeholder:text-slate outline-none focus:outline-none focus-visible:outline-none ring-0 focus:ring-0 focus-visible:ring-0 shadow-none focus:shadow-none focus-visible:shadow-none border-0"
                     required
                   />
                 </div>
