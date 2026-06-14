@@ -130,9 +130,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               'flex-1 min-w-0 bg-transparent font-mono text-body transition-colors duration-200',
               'placeholder:text-slate/40 placeholder:font-mono',
               // Strip ALL browser native focus indicators from the inner element
-              'outline-none focus:outline-none focus-visible:outline-none',
+              '!outline-none outline-none focus:outline-none focus-visible:outline-none',
               'ring-0 focus:ring-0 focus-visible:ring-0',
-              'shadow-none focus:shadow-none focus-visible:shadow-none',
+              'border-0 shadow-none focus:shadow-none focus-visible:shadow-none',
               // Size
               sizes[inputSize],
               // Padding
