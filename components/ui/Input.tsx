@@ -82,20 +82,23 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className={`${fullWidth ? 'w-full' : ''} ${wrapperClassName}`}>
-        {/* Label */}
+        {/* Label — colour driven by group-focus-within on the field container below */}
         {label && (
           <label
             htmlFor={inputId}
             className={`block font-mono text-[11px] font-bold uppercase tracking-wider mb-1.5 transition-colors duration-150 select-none ${
-              error ? 'text-red-600' : focused ? 'text-teal' : 'text-slate'
+              error ? 'text-red-600' : 'text-slate'
             }`}
           >
             {label}
           </label>
         )}
 
-        {/* Input container */}
-        <div className={`relative flex items-center group rounded-btn border transition-all duration-200 ease-out overflow-hidden ${borderState} ${disabledStyles}`}>
+        {/* Input container — border, ring, bg all live here, never on the inner <input> */}
+        <div className={`relative flex items-center group rounded-btn border transition-all duration-200 ease-out overflow-hidden
+          focus-within:border-teal focus-within:shadow-[0_0_0_3px_rgba(42,157,143,0.12)]
+          ${error ? 'border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.12)]' : 'border-border hover:border-slate/50'}
+          ${disabledStyles}`}>
 
           {/* Left prefix text — flex sibling, not absolute */}
           {prefixText && (
@@ -126,12 +129,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               // Base — no border/bg here; the wrapper div owns them
               'flex-1 min-w-0 bg-transparent font-mono text-body transition-colors duration-200',
               'placeholder:text-slate/40 placeholder:font-mono',
-              'focus:outline-none',
-              // Size (height via wrapper, font via here)
+              // Strip ALL browser native focus indicators from the inner element
+              'outline-none focus:outline-none focus-visible:outline-none',
+              'ring-0 focus:ring-0 focus-visible:ring-0',
+              'shadow-none focus:shadow-none focus-visible:shadow-none',
+              // Size
               sizes[inputSize],
-              // Padding (left only when no prefix text)
+              // Padding
               prefixText ? 'pl-3 pr-3' : `${leftPad} ${rightPad}`,
-              // Remove border/bg — wrapper owns them
+              // No border or bg — wrapper owns them
               'border-0',
               // Custom overrides
               className,
@@ -139,10 +145,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
 
-          {/* Right suffix icon */}
+          {/* Right suffix icon — teal on focus-within, driven by CSS */}
           {suffixIcon && (
             <div className={`flex items-center pr-3.5 flex-shrink-0 pointer-events-auto transition-colors duration-150 ${
-              error ? 'text-red-400' : focused ? 'text-teal' : 'text-slate/60'
+              error ? 'text-red-400' : 'text-slate/60 group-focus-within:text-teal'
             }`}>
               {suffixIcon}
             </div>
