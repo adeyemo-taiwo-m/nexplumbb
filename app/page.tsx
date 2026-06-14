@@ -248,7 +248,7 @@ export default function Homepage() {
                     placeholder="What do you need? e.g. leaking pipe, electrical fault..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-transparent text-body font-mono text-[14px] placeholder:text-slate outline-none focus:outline-none focus-visible:outline-none ring-0 focus:ring-0 focus-visible:ring-0 shadow-none focus:shadow-none focus-visible:shadow-none border-0"
+                    className="w-full bg-transparent text-body font-mono text-[14px] placeholder:text-slate !outline-none border-0"
                     required
                   />
                 </div>
