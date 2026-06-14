@@ -34,22 +34,26 @@ export default function Homepage() {
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [locationName, setLocationName] = useState("Lagos");
-  const [locationStatus, setLocationStatus] = useState<'detecting' | 'detected' | 'denied' | 'error'>('detecting');
+  const [locationStatus, setLocationStatus] = useState<
+    "detecting" | "detected" | "denied" | "error"
+  >("detecting");
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
   const [featuredArtisans, setFeaturedArtisans] = useState<Artisan[]>([]);
   const [loadingArtisans, setLoadingArtisans] = useState(true);
   const [apiError, setApiError] = useState(false);
-  const [waitlistStatus, setWaitlistStatus] = useState<Record<string, boolean>>({});
+  const [waitlistStatus, setWaitlistStatus] = useState<Record<string, boolean>>(
+    {},
+  );
 
   const availableLGAs = [
-    'Surulere',
-    'Yaba',
-    'Ikeja',
-    'Lekki',
-    'Victoria Island',
-    'Ebute Metta',
-    'Maryland',
-    'Apapa'
+    "Surulere",
+    "Yaba",
+    "Ikeja",
+    "Lekki",
+    "Victoria Island",
+    "Ebute Metta",
+    "Maryland",
+    "Apapa",
   ];
 
   useEffect(() => {
@@ -60,8 +64,8 @@ export default function Homepage() {
   useEffect(() => {
     if (mounted) {
       if (!navigator.geolocation) {
-        setLocationStatus('denied');
-        setLocationName('Lagos');
+        setLocationStatus("denied");
+        setLocationName("Lagos");
         return;
       }
 
@@ -69,18 +73,18 @@ export default function Homepage() {
         (position) => {
           // Mock successful reverse-geocoding to Surulere for testing
           setTimeout(() => {
-            setLocationStatus('detected');
-            setLocationName('Surulere');
+            setLocationStatus("detected");
+            setLocationName("Surulere");
           }, 1200);
         },
         (error) => {
           // Geolocation blocked or failed
           setTimeout(() => {
-            setLocationStatus('denied');
-            setLocationName('Lagos');
+            setLocationStatus("denied");
+            setLocationName("Lagos");
           }, 1200);
         },
-        { timeout: 4000 }
+        { timeout: 4000 },
       );
     }
   }, [mounted]);
@@ -96,9 +100,10 @@ export default function Homepage() {
           // If we want to simulate a rare API failure, we can handle it here.
           // In regular usage, we filter the mock DB.
           let filtered = dbArtisans;
-          if (locationName !== 'Lagos') {
+          if (locationName !== "Lagos") {
             filtered = dbArtisans.filter(
-              (artisan) => artisan.area.toLowerCase() === locationName.toLowerCase()
+              (artisan) =>
+                artisan.area.toLowerCase() === locationName.toLowerCase(),
             );
           }
 
@@ -118,19 +123,21 @@ export default function Homepage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     router.push(
-      `/search?q=${encodeURIComponent(searchQuery.trim())}&location=${encodeURIComponent(locationName)}`
+      `/search?q=${encodeURIComponent(searchQuery.trim())}&location=${encodeURIComponent(locationName)}`,
     );
   };
 
   const handleCategoryClick = (category: string) => {
     router.push(
-      `/search?category=${encodeURIComponent(category.toLowerCase())}&location=${encodeURIComponent(locationName)}`
+      `/search?category=${encodeURIComponent(category.toLowerCase())}&location=${encodeURIComponent(locationName)}`,
     );
   };
 
   const handleJoinWaitlist = (lga: string) => {
     setWaitlistStatus((prev) => ({ ...prev, [lga]: true }));
-    toast.success(`Successfully joined the artisan waitlist for ${lga}! We'll notify you as soon as they register.`);
+    toast.success(
+      `Successfully joined the artisan waitlist for ${lga}! We'll notify you as soon as they register.`,
+    );
   };
 
   if (!mounted) {
@@ -154,19 +161,22 @@ export default function Homepage() {
       number: 1,
       icon: Search,
       title: "Search",
-      description: "Type what you need or pick a category. We'll show you verified artisans near your location in seconds."
+      description:
+        "Type what you need or pick a category. We'll show you verified artisans near your location in seconds.",
     },
     {
       number: 2,
       icon: ShieldCheck,
       title: "Book & pay safely",
-      description: "Choose your artisan, pick a time, and pay through secure escrow. Your money is protected until the job is done."
+      description:
+        "Choose your artisan, pick a time, and pay through secure escrow. Your money is protected until the job is done.",
     },
     {
       number: 3,
       icon: MapPin,
       title: "Track & confirm",
-      description: "Watch your artisan travel to you on a live map. Confirm when the job is complete and release payment."
+      description:
+        "Watch your artisan travel to you on a live map. Confirm when the job is complete and release payment.",
     },
   ];
 
@@ -179,16 +189,17 @@ export default function Homepage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
-            "name": "NexPlumb",
-            "image": "https://nexplumb.com/logo.png",
-            "description": "Nigeria's trust-first artisan marketplace connecting urban residents to vetted, insured professionals through secure escrow.",
-            "address": {
+            name: "NexPlumb",
+            image: "https://nexplumb.com/logo.png",
+            description:
+              "Nigeria's trust-first artisan marketplace connecting urban residents to vetted, insured professionals through secure escrow.",
+            address: {
               "@type": "PostalAddress",
-              "addressLocality": "Lagos",
-              "addressCountry": "NG"
+              addressLocality: "Lagos",
+              addressCountry: "NG",
             },
-            "url": "https://nexplumb.com"
-          })
+            url: "https://nexplumb.com",
+          }),
         }}
       />
 
@@ -202,24 +213,27 @@ export default function Homepage() {
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange/5 rounded-full blur-[140px] pointer-events-none" />
 
           <div className="max-w-[1200px] mx-auto w-full px-6 tablet:px-10 py-24 md:py-32 grid grid-cols-1 desktop:grid-cols-12 gap-12 items-center relative z-10">
-            
             {/* Left Column (55%) */}
             <div className="desktop:col-span-7 flex flex-col items-start text-left">
               <div className="animate-fade-in-up">
                 <span className="inline-flex items-center gap-2 bg-teal/10 text-teal border border-teal/20 rounded-full px-4.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider mb-6">
-                  <Zap size={12} className="animate-pulse" /> Nigeria&apos;s #1 Escrow Artisan Marketplace
+                  <Zap size={12} className="animate-pulse" /> Nigeria&apos;s #1
+                  Escrow Artisan Marketplace
                 </span>
               </div>
 
               {/* H1 Headline */}
               <h1 className="font-display font-bold text-[44px] tablet:text-[54px] text-white leading-tight animate-fade-in-up delay-100">
                 Your trusted artisan, <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal via-nxblue to-orange">one tap away</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal via-nxblue to-orange">
+                  one tap away
+                </span>
               </h1>
 
               {/* Subheadline (with Lagos keyword for SEO) */}
               <p className="font-body text-[18px] text-white/80 mt-4 max-w-[520px] leading-relaxed animate-fade-in-up delay-200">
-                Find verified plumbers, electricians, and tradespeople near you in Lagos — instantly
+                Find verified plumbers, electricians, and tradespeople near you
+                in Lagos — instantly
               </p>
 
               {/* Search Bar (White Card style) */}
@@ -251,20 +265,28 @@ export default function Homepage() {
               {/* Location Selector (under search bar) */}
               <div className="mt-3 flex items-center gap-2 font-mono text-[12px] text-white/70 relative">
                 <span>📍</span>
-                {locationStatus === 'detecting' ? (
+                {locationStatus === "detecting" ? (
                   <span className="inline-flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
                     Auto-detecting your location...
                   </span>
                 ) : (
                   <div className="flex items-center gap-1.5">
-                    <span>{locationName === 'Lagos' ? 'Lagos, Nigeria' : `${locationName}, Lagos`}</span>
-                    {locationStatus === 'denied' && (
-                      <span className="text-white/40 text-[10px]">(Location denied, showing Lagos-wide)</span>
+                    <span>
+                      {locationName === "Lagos"
+                        ? "Lagos, Nigeria"
+                        : `${locationName}, Lagos`}
+                    </span>
+                    {locationStatus === "denied" && (
+                      <span className="text-white/40 text-[10px]">
+                        (Location denied, showing Lagos-wide)
+                      </span>
                     )}
                     <button
                       type="button"
-                      onClick={() => setShowLocationDropdown(!showLocationDropdown)}
+                      onClick={() =>
+                        setShowLocationDropdown(!showLocationDropdown)
+                      }
                       className="text-teal hover:text-teal-light underline font-bold focus:outline-none transition-colors"
                     >
                       [change]
@@ -275,13 +297,16 @@ export default function Homepage() {
                 {/* LGA Dropdown */}
                 {showLocationDropdown && (
                   <>
-                    <div className="fixed inset-0 z-40" onClick={() => setShowLocationDropdown(false)} />
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setShowLocationDropdown(false)}
+                    />
                     <div className="absolute left-0 mt-8 w-56 bg-white border border-border rounded-card shadow-modal py-2 z-50 text-body font-display text-[13px]">
                       <button
                         type="button"
                         onClick={() => {
-                          setLocationName('Lagos');
-                          setLocationStatus('denied'); // Default to Lagos wide
+                          setLocationName("Lagos");
+                          setLocationStatus("denied"); // Default to Lagos wide
                           setShowLocationDropdown(false);
                         }}
                         className="w-full text-left px-4 py-2 hover:bg-lgray transition-colors font-bold text-navy"
@@ -295,7 +320,7 @@ export default function Homepage() {
                           type="button"
                           onClick={() => {
                             setLocationName(lga);
-                            setLocationStatus('detected');
+                            setLocationStatus("detected");
                             setShowLocationDropdown(false);
                           }}
                           className="w-full text-left px-4 py-2 hover:bg-lgray transition-colors"
@@ -315,7 +340,7 @@ export default function Homepage() {
                   { label: "⚡ Electrical", slug: "electrical" },
                   { label: "🪚 Carpentry", slug: "carpentry" },
                   { label: "🎨 Painting", slug: "painting" },
-                  { label: "🔲 Tiling", slug: "tiling" }
+                  { label: "🔲 Tiling", slug: "tiling" },
                 ].map((chip) => (
                   <button
                     key={chip.slug}
@@ -340,14 +365,49 @@ export default function Homepage() {
                   className="w-full h-auto drop-shadow-2xl"
                 >
                   {/* Decorative background grid and circles */}
-                  <circle cx="200" cy="200" r="180" fill="url(#hero-circle-grad)" />
-                  <circle cx="200" cy="200" r="140" fill="none" stroke="rgba(42, 157, 143, 0.15)" strokeWidth="1.5" strokeDasharray="6 6" className="animated-dashed" />
-                  
+                  <circle
+                    cx="200"
+                    cy="200"
+                    r="180"
+                    fill="url(#hero-circle-grad)"
+                  />
+                  <circle
+                    cx="200"
+                    cy="200"
+                    r="140"
+                    fill="none"
+                    stroke="rgba(42, 157, 143, 0.15)"
+                    strokeWidth="1.5"
+                    strokeDasharray="6 6"
+                    className="animated-dashed"
+                  />
+
                   {/* Modern Room elements: Couch shape */}
-                  <rect x="90" y="240" width="220" height="70" rx="14" fill="#122A44" stroke="rgba(255,255,255,0.08)" strokeWidth="2" />
-                  <rect x="110" y="220" width="180" height="40" rx="8" fill="#0D2137" />
+                  <rect
+                    x="90"
+                    y="240"
+                    width="220"
+                    height="70"
+                    rx="14"
+                    fill="#122A44"
+                    stroke="rgba(255,255,255,0.08)"
+                    strokeWidth="2"
+                  />
+                  <rect
+                    x="110"
+                    y="220"
+                    width="180"
+                    height="40"
+                    rx="8"
+                    fill="#0D2137"
+                  />
                   {/* Plant decoration */}
-                  <path d="M 70 310 Q 50 240 85 200 Q 110 240 70 310" fill="url(#plant-grad)" opacity="0.85" className="animated-plant" />
+                  <path
+                    d="M 70 310 Q 50 240 85 200 Q 110 240 70 310"
+                    fill="url(#plant-grad)"
+                    opacity="0.85"
+                    className="animated-plant"
+                  />
                   <circle cx="75" cy="300" r="10" fill="#E76F51" />
 
                   {/* Escrow Shield Symbol floating */}
@@ -372,18 +432,54 @@ export default function Homepage() {
                   {/* Floating badge for Verified */}
                   <g transform="translate(260, 240)">
                     <g className="animated-badge-right">
-                      <rect x="0" y="0" width="110" height="36" rx="18" fill="rgba(13,33,55,0.9)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                      <rect
+                        x="0"
+                        y="0"
+                        width="110"
+                        height="36"
+                        rx="18"
+                        fill="rgba(13,33,55,0.9)"
+                        stroke="rgba(255,255,255,0.15)"
+                        strokeWidth="1.5"
+                      />
                       <circle cx="18" cy="18" r="8" fill="#2E86AB" />
-                      <text x="34" y="22" fill="#FFFFFF" fontSize="10" fontFamily="Sora, sans-serif" fontWeight="bold">NIN Vetted</text>
+                      <text
+                        x="34"
+                        y="22"
+                        fill="#FFFFFF"
+                        fontSize="10"
+                        fontFamily="Sora, sans-serif"
+                        fontWeight="bold"
+                      >
+                        NIN Vetted
+                      </text>
                     </g>
                   </g>
 
                   {/* Floating badge for Escrow */}
                   <g transform="translate(30, 130)">
                     <g className="animated-badge-left">
-                      <rect x="0" y="0" width="100" height="36" rx="18" fill="rgba(13,33,55,0.9)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                      <rect
+                        x="0"
+                        y="0"
+                        width="100"
+                        height="36"
+                        rx="18"
+                        fill="rgba(13,33,55,0.9)"
+                        stroke="rgba(255,255,255,0.15)"
+                        strokeWidth="1.5"
+                      />
                       <circle cx="18" cy="18" r="8" fill="#E76F51" />
-                      <text x="34" y="22" fill="#FFFFFF" fontSize="10" fontFamily="Sora, sans-serif" fontWeight="bold">Escrow Safe</text>
+                      <text
+                        x="34"
+                        y="22"
+                        fill="#FFFFFF"
+                        fontSize="10"
+                        fontFamily="Sora, sans-serif"
+                        fontWeight="bold"
+                      >
+                        Escrow Safe
+                      </text>
                     </g>
                   </g>
 
@@ -444,22 +540,48 @@ export default function Homepage() {
                         animation-delay: 0.5s;
                       }
                     `}</style>
-                    <linearGradient id="hero-circle-grad" x1="200" y1="20" x2="200" y2="380" gradientUnits="userSpaceOnUse">
+                    <linearGradient
+                      id="hero-circle-grad"
+                      x1="200"
+                      y1="20"
+                      x2="200"
+                      y2="380"
+                      gradientUnits="userSpaceOnUse"
+                    >
                       <stop stopColor="rgba(42, 157, 143, 0.08)" />
                       <stop offset="1" stopColor="rgba(231, 111, 81, 0.03)" />
                     </linearGradient>
-                    <linearGradient id="plant-grad" x1="70" y1="200" x2="70" y2="310" gradientUnits="userSpaceOnUse">
+                    <linearGradient
+                      id="plant-grad"
+                      x1="70"
+                      y1="200"
+                      x2="70"
+                      y2="310"
+                      gradientUnits="userSpaceOnUse"
+                    >
                       <stop stopColor="#2A9D8F" />
                       <stop offset="1" stopColor="#122A44" />
                     </linearGradient>
-                    <filter id="shield-shadow" x="110" y="60" width="180" height="200" filterUnits="userSpaceOnUse">
-                      <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#0D2137" floodOpacity="0.4" />
+                    <filter
+                      id="shield-shadow"
+                      x="110"
+                      y="60"
+                      width="180"
+                      height="200"
+                      filterUnits="userSpaceOnUse"
+                    >
+                      <feDropShadow
+                        dx="0"
+                        dy="8"
+                        stdDeviation="10"
+                        floodColor="#0D2137"
+                        floodOpacity="0.4"
+                      />
                     </filter>
                   </defs>
                 </svg>
               </div>
             </div>
-
           </div>
         </section>
 
@@ -469,10 +591,7 @@ export default function Homepage() {
             {trustMetrics.map((metric, idx) => {
               const Icon = metric.icon;
               return (
-                <div
-                  key={idx}
-                  className="flex items-center gap-3 text-white"
-                >
+                <div key={idx} className="flex items-center gap-3 text-white">
                   <Icon size={32} className="text-teal" />
                   <div className="text-left">
                     <p className="text-[22px] font-bold leading-none">
@@ -489,7 +608,10 @@ export default function Homepage() {
         </section>
 
         {/* ══════════════ SECTION 3: HOW IT WORKS ══════════════ */}
-        <section id="how-it-works" className="bg-white py-20 border-b border-border">
+        <section
+          id="how-it-works"
+          className="bg-white py-20 border-b border-border"
+        >
           <div className="max-w-[1200px] mx-auto px-6 tablet:px-10 text-center">
             {/* Title */}
             <h2 className="text-h2 font-display font-bold text-navy text-center mb-12">
@@ -505,12 +627,15 @@ export default function Homepage() {
                     key={step.number}
                     className="flex flex-col items-start p-6 rounded-card border border-border bg-lgray/10 hover:border-teal/30 hover:shadow-card transition-all duration-200"
                   >
-                    {/* Circle Number */}
-                    <div className="w-12 h-12 bg-orange text-white rounded-full font-bold text-[18px] flex items-center justify-center shadow-md mb-6">
-                      {step.number}
+                    {/* Icon & Number Header */}
+                    <div className="flex items-center gap-4 mb-6">
+                      {/* Icon */}
+                      <Icon size={40} className="text-teal" />
+                      {/* Circle Number */}
+                      <div className="w-10 h-10 bg-orange text-white rounded-full font-bold text-[16px] flex items-center justify-center shadow-md">
+                        {step.number}
+                      </div>
                     </div>
-                    {/* Icon */}
-                    <Icon size={40} className="text-teal mb-4" />
                     {/* Title */}
                     <h3 className="text-h3 font-display font-semibold text-navy">
                       {step.title}
@@ -538,7 +663,6 @@ export default function Homepage() {
         {/* ══════════════ SECTION 4: FEATURED ARTISANS ══════════════ */}
         <section className="w-full bg-lgray py-20 border-b border-border">
           <div className="max-w-[1200px] mx-auto px-6 tablet:px-10">
-            
             {/* Header row */}
             <div className="flex items-end justify-between mb-8">
               <div className="text-left">
@@ -546,7 +670,9 @@ export default function Homepage() {
                   Top-rated artisans near you
                 </h2>
                 <p className="font-mono text-[13px] text-teal font-bold mt-1">
-                  {locationStatus === 'denied' ? 'in Lagos' : `in ${locationName}`}
+                  {locationStatus === "denied"
+                    ? "in Lagos"
+                    : `in ${locationName}`}
                 </p>
               </div>
               <Link
@@ -585,7 +711,8 @@ export default function Homepage() {
                   Coming soon — artisans signing up now in {locationName}
                 </p>
                 <p className="font-body text-slate text-[14px] mb-6">
-                  We are currently onboarding top-rated plumbers, electricians, and tilers in your neighborhood.
+                  We are currently onboarding top-rated plumbers, electricians,
+                  and tilers in your neighborhood.
                 </p>
                 <Button
                   variant="primary"
@@ -593,7 +720,9 @@ export default function Homepage() {
                   onClick={() => handleJoinWaitlist(locationName)}
                   disabled={!!waitlistStatus[locationName]}
                 >
-                  {waitlistStatus[locationName] ? "Joined Waitlist ✓" : "Join waitlist"}
+                  {waitlistStatus[locationName]
+                    ? "Joined Waitlist ✓"
+                    : "Join waitlist"}
                 </Button>
               </div>
             ) : (
@@ -613,11 +742,11 @@ export default function Homepage() {
                 {/* Mobile Horizontal Scroll */}
                 <div className="sm:hidden overflow-x-auto pb-4 flex gap-4 w-full scrollbar-hide">
                   {featuredArtisans.map((artisan) => (
-                    <div key={artisan.id} className="min-w-[280px] w-[280px] flex-shrink-0">
-                      <ArtisanCard
-                        variant="vertical"
-                        {...artisan}
-                      />
+                    <div
+                      key={artisan.id}
+                      className="min-w-[280px] w-[280px] flex-shrink-0"
+                    >
+                      <ArtisanCard variant="vertical" {...artisan} />
                     </div>
                   ))}
                 </div>
