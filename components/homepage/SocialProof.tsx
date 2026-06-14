@@ -76,15 +76,16 @@ export default function SocialProof() {
         </div>
 
         {/* Featured Quote */}
-        <div className="bg-navy rounded-card p-8 tablet:p-10 mx-auto max-w-[760px] mt-12 relative overflow-hidden">
+        <div className="bg-navy rounded-card p-10 tablet:p-14 mx-auto max-w-[760px] mt-14 relative overflow-hidden">
           {/* Decorative gradient glow */}
           <div className="absolute -top-20 -right-20 w-[300px] h-[300px] bg-orange/10 rounded-full blur-[80px] pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-[200px] h-[200px] bg-teal/5 rounded-full blur-[60px] pointer-events-none" />
 
-          {/* Large open-quote */}
+          {/* Large open-quote — sits above the text, not overlapping */}
           <svg
-            className="absolute top-6 left-8 opacity-80"
-            width="52"
-            height="40"
+            className="mb-6 opacity-70"
+            width="48"
+            height="36"
             viewBox="0 0 52 40"
             fill="none"
           >
@@ -94,25 +95,25 @@ export default function SocialProof() {
             />
           </svg>
 
-          <blockquote className="text-white text-[16px] tablet:text-[18px] leading-relaxed font-medium italic pt-8 tablet:pt-4 relative z-10">
+          <blockquote className="text-white text-[17px] tablet:text-[19px] leading-[1.8] font-medium italic relative z-10">
             &ldquo;I paid a plumber from the roadside ₦8,000 to fix my bathroom pipe. He
             collected the money and made it worse. On Nexplumb, I paid ₦6,500, watched the
             plumber arrive on the map, and he fixed it in 45 minutes. That was six months ago.
             I haven&apos;t called a stranger from the street since.&rdquo;
           </blockquote>
 
-          <div className="mt-6 flex items-center gap-3 relative z-10">
-            {/* Avatar */}
-            <div className="w-10 h-10 rounded-full bg-orange/30 flex items-center justify-center font-mono text-[11px] font-bold text-orange flex-shrink-0">
+          {/* Author row — separated with a faint divider for breathing room */}
+          <div className="mt-10 pt-8 border-t border-white/10 flex items-center gap-4 relative z-10">
+            <div className="w-12 h-12 rounded-full bg-orange/30 flex items-center justify-center font-mono text-[12px] font-bold text-orange flex-shrink-0">
               CO
             </div>
             <div>
-              <p className="font-bold text-white text-[14px] leading-none">Chidinma O.</p>
-              <p className="text-white/60 text-[13px] mt-0.5">Surulere, Lagos</p>
+              <p className="font-bold text-white text-[15px] leading-none">Chidinma O.</p>
+              <p className="text-white/50 text-[13px] mt-1.5">Surulere, Lagos</p>
             </div>
-            <div className="ml-auto flex items-center gap-0.5">
+            <div className="ml-auto flex items-center gap-1">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} size={14} className="fill-amber text-amber" />
+                <Star key={i} size={15} className="fill-amber text-amber" />
               ))}
             </div>
           </div>
