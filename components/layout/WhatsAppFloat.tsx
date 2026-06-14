@@ -1,10 +1,10 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
 export const WhatsAppFloat: React.FC = () => {
-  const [showTooltip, setShowTooltip] = useState(false)
-  const whatsappNumber = '2348080908908' // Mock WhatsApp line
+  const [showTooltip, setShowTooltip] = useState(false);
+  const whatsappNumber = "2347012425718"; // Mock WhatsApp line
 
   return (
     <div className="fixed bottom-6 right-6 z-40">
@@ -36,6 +36,6 @@ export const WhatsAppFloat: React.FC = () => {
         </div>
       )}
     </div>
-  )
-}
-export default WhatsAppFloat
+  );
+};
+export default WhatsAppFloat;
