@@ -26,6 +26,7 @@ import SocialProof from "@/components/homepage/SocialProof";
 import HeroSearchBar from "@/components/homepage/HeroSearchBar";
 import ArtisanCTA from "@/components/homepage/ArtisanCTA";
 import TradesBrowser from "@/components/homepage/TradesBrowser";
+import PricingSection from "@/components/homepage/PricingSection";
 
 export default function Homepage() {
   const router = useRouter();
@@ -700,6 +701,7 @@ export default function Homepage() {
         <ServicesCatalogue />
         <TrustStack />
         <SocialProof />
+        <PricingSection />
         <ArtisanCTA />
         <TradesBrowser />
       </main>
