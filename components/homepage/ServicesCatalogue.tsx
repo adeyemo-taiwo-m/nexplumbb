@@ -168,22 +168,26 @@ function ServiceCard({
 interface TradeCategoryBlockProps {
   category: TradeCategory
   isLast: boolean
+  isReversed: boolean
 }
 
-function TradeCategoryBlock({ category, isLast }: TradeCategoryBlockProps) {
+function TradeCategoryBlock({ category, isLast, isReversed }: TradeCategoryBlockProps) {
   return (
     <>
-      {/* Block: text left + 2x2 grid right */}
-      <div className="flex flex-col tablet:flex-col desktop:flex-row gap-8 desktop:gap-16 items-start">
-        {/* LEFT */}
-        <div className="flex-shrink-0 desktop:w-[45%] w-full">
+      {/* Block: alternating text/cards direction on desktop */}
+      <div
+        className={`flex flex-col gap-8 desktop:gap-16 items-start
+          desktop:flex-row ${isReversed ? 'desktop:flex-row-reverse' : ''}`}
+      >
+        {/* TEXT COLUMN */}
+        <div className={`flex-shrink-0 desktop:w-[42%] w-full ${isReversed ? 'desktop:text-right' : ''}`}>
           <h3 className="font-display font-bold text-[22px] text-navy">{category.title}</h3>
-          <p className="font-body text-slate mt-2 max-w-[340px] leading-relaxed text-[15px]">
+          <p className={`font-body text-slate mt-2 leading-relaxed text-[15px] ${isReversed ? 'ml-auto' : ''} max-w-[340px]`}>
             {category.description}
           </p>
-          <ul className="mt-4 flex flex-col gap-2">
+          <ul className={`mt-4 flex flex-col gap-2 ${isReversed ? 'items-end' : 'items-start'}`}>
             {category.features.map((f) => (
-              <li key={f} className="flex items-center gap-2 text-navy text-[14px]">
+              <li key={f} className={`flex items-center gap-2 text-navy text-[14px] ${isReversed ? 'flex-row-reverse' : ''}`}>
                 <CheckCircle size={16} className="text-teal flex-shrink-0" />
                 {f}
               </li>
@@ -192,9 +196,9 @@ function TradeCategoryBlock({ category, isLast }: TradeCategoryBlockProps) {
           {/* CTA — text link on desktop, orange button on mobile */}
           <Link
             href={category.ctaLink}
-            className="mt-6 hidden tablet:inline-flex items-center gap-1 text-orange font-medium text-[14px] hover:underline"
+            className={`mt-6 hidden tablet:inline-flex items-center gap-1 text-orange font-medium text-[14px] hover:underline ${isReversed ? 'flex-row-reverse' : ''}`}
           >
-            {category.ctaText} →
+            {isReversed ? `← ${category.ctaText}` : `${category.ctaText} →`}
           </Link>
           <Link
             href={category.ctaLink}
@@ -204,7 +208,7 @@ function TradeCategoryBlock({ category, isLast }: TradeCategoryBlockProps) {
           </Link>
         </div>
 
-        {/* RIGHT — 2×2 service card grid */}
+        {/* CARDS GRID */}
         <div className="flex-1 w-full grid grid-cols-2 gap-3">
           {category.services.map((svc, idx) => (
             <ServiceCard
@@ -250,7 +254,12 @@ export default function ServicesCatalogue() {
         {/* Trade Category Blocks */}
         <div className="flex flex-col">
           {tradeCategories.map((cat, idx) => (
-            <TradeCategoryBlock key={cat.id} category={cat} isLast={idx === tradeCategories.length - 1} />
+            <TradeCategoryBlock
+              key={cat.id}
+              category={cat}
+              isLast={idx === tradeCategories.length - 1}
+              isReversed={idx % 2 !== 0}
+            />
           ))}
         </div>
 
