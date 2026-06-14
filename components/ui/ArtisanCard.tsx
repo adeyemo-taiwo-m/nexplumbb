@@ -133,13 +133,13 @@ export const ArtisanCard: React.FC<ArtisanCardProps> = ({
 
   /* ═══════════ HORIZONTAL CARD — Search / SEO Sections ═══════════ */
   return (
-    <div className={`group relative flex flex-col tablet:flex-row gap-5 p-5 bg-white rounded-[16px] border overflow-hidden transition-all duration-300 ease-out hover:shadow-[0_8px_30px_rgba(13,33,55,0.08)] hover:-translate-y-0.5 ${!isAvailable ? 'opacity-60 border-border/40' : 'border-border/60 hover:border-teal/30'}`}>
+    <div className={`group relative flex flex-wrap gap-5 p-5 bg-white rounded-[16px] border overflow-hidden transition-all duration-300 ease-out hover:shadow-[0_8px_30px_rgba(13,33,55,0.08)] hover:-translate-y-0.5 ${!isAvailable ? 'opacity-60 border-border/40' : 'border-border/60 hover:border-teal/30'}`}>
       
       {/* Left accent bar */}
       <div className={`absolute top-0 left-0 w-1 h-full ${tc.bg} rounded-l-[16px]`} />
 
       {/* Photo */}
-      <div className="relative self-center tablet:self-start flex-shrink-0 ml-1">
+      <div className="relative flex-shrink-0 ml-1 self-start">
         <div className="w-[76px] h-[76px] rounded-[14px] bg-gradient-to-br from-teal/15 to-orange/15 p-[2px]">
           <img
             src={photo}
@@ -151,108 +151,116 @@ export const ArtisanCard: React.FC<ArtisanCardProps> = ({
         <span className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-[2.5px] border-white ${isAvailable ? 'bg-emerald-400' : 'bg-slate/40'}`} />
       </div>
 
-      {/* Centre */}
-      <div className="flex-1 min-w-0">
-        <div className="flex flex-col sm:flex-row sm:items-start gap-1.5 justify-between">
-          <div>
-            <h3 className="font-display font-bold text-[16px] text-navy group-hover:text-teal transition-colors flex items-center gap-2">
-              {name}
-              {badges.includes('id_verified') && (
-                <CheckCircle size={15} className="text-teal flex-shrink-0" />
-              )}
-            </h3>
-            <div className="flex items-center gap-2 mt-1">
-              <span className={`inline-flex items-center gap-1 ${tc.bg} ${tc.text} ${tc.border} border rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold`}>
-                {trade}
+      {/* Centre + Right Wrapper */}
+      <div className="flex flex-wrap flex-1 gap-5">
+        
+        {/* Centre */}
+        <div className="flex-1 min-w-[240px] max-w-full">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-1.5 justify-between">
+            <div>
+              <h3 className="font-display font-bold text-[16px] text-navy group-hover:text-teal transition-colors flex items-center gap-2">
+                {name}
+                {badges.includes('id_verified') && (
+                  <CheckCircle size={15} className="text-teal flex-shrink-0" />
+                )}
+              </h3>
+              <div className="flex items-center gap-2 mt-1">
+                <span className={`inline-flex items-center gap-1 ${tc.bg} ${tc.text} ${tc.border} border rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold`}>
+                  {trade}
+                </span>
+                <span className="flex items-center gap-0.5 font-mono text-[11px] text-slate">
+                  <MapPin size={11} /> {area}, Lagos
+                </span>
+              </div>
+            </div>
+
+            {/* Availability pill */}
+            {isAvailable ? (
+              <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-2.5 py-1 font-mono text-[10px] font-bold shrink-0 select-none w-fit mt-2 sm:mt-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Available
               </span>
-              <span className="flex items-center gap-0.5 font-mono text-[11px] text-slate">
-                <MapPin size={11} /> {area}, Lagos
+            ) : (
+              <span className="inline-flex items-center gap-1.5 bg-slate/5 text-slate border border-slate/10 rounded-full px-2.5 py-1 font-mono text-[10px] font-bold shrink-0 select-none w-fit mt-2 sm:mt-0">
+                Unavailable
               </span>
+            )}
+          </div>
+
+          {/* Rating row */}
+          <div className="mt-2.5 flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                  key={i}
+                  size={12}
+                  className={i < Math.round(rating) ? 'text-amber fill-amber' : 'text-border fill-border'}
+                />
+              ))}
+              <span className="font-mono text-[12px] font-bold text-navy ml-1">{rating}</span>
+              <span className="font-mono text-[11px] text-slate">({reviewCount})</span>
+            </div>
+            <span className="w-px h-3.5 bg-border" />
+            <span className="font-mono text-[11px] text-slate flex items-center gap-1">
+              <Briefcase size={11} /> {jobCount} jobs
+            </span>
+          </div>
+
+          {/* Bio */}
+          <p className="font-body text-[13px] text-body/80 line-clamp-2 mt-2 leading-relaxed pr-2">
+            {bio}
+          </p>
+
+          {/* Skills */}
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {skills.slice(0, 4).map((skill) => (
+              <span
+                key={skill}
+                className="bg-lgray/80 text-body/70 font-mono text-[10px] font-semibold rounded-full px-2.5 py-1 border border-border/30"
+              >
+                {skill}
+              </span>
+            ))}
+            {skills.length > 4 && (
+              <span className="text-slate font-mono text-[10px] font-semibold px-2 py-1">
+                +{skills.length - 4}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div className="flex flex-col justify-between gap-4 flex-1 min-w-[200px]">
+          
+          <div className="flex flex-row justify-between items-start w-full">
+            <div className="text-left">
+              <p className="text-[9px] font-mono text-slate uppercase tracking-widest font-bold">Est. Price</p>
+              <p className="font-mono text-[17px] font-bold text-navy mt-0.5 tracking-tight whitespace-nowrap">
+                {formatNairaRange(priceMin, priceMax)}
+              </p>
+            </div>
+
+            {/* Trust badges */}
+            <div className="flex gap-1 flex-wrap justify-end max-w-[100px]">
+              {badges.map((badge) => (
+                <TrustBadge key={badge} type={badge} />
+              ))}
             </div>
           </div>
 
-          {/* Availability pill */}
-          {isAvailable ? (
-            <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-2.5 py-1 font-mono text-[10px] font-bold shrink-0 select-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Available
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 bg-slate/5 text-slate border border-slate/10 rounded-full px-2.5 py-1 font-mono text-[10px] font-bold shrink-0 select-none">
-              Unavailable
-            </span>
-          )}
-        </div>
-
-        {/* Rating row */}
-        <div className="mt-2.5 flex items-center gap-3">
-          <div className="flex items-center gap-1">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                size={12}
-                className={i < Math.round(rating) ? 'text-amber fill-amber' : 'text-border fill-border'}
-              />
-            ))}
-            <span className="font-mono text-[12px] font-bold text-navy ml-1">{rating}</span>
-            <span className="font-mono text-[11px] text-slate">({reviewCount})</span>
+          {/* Action Buttons */}
+          <div className="flex gap-2 w-full mt-auto">
+            <Link href={`/artisans/${slug}`} className="flex-1 w-full">
+              <Button variant="secondary" size="sm" className="w-full text-center">
+                Profile
+              </Button>
+            </Link>
+            <Link href={`/book/${slug}`} className="flex-1 w-full">
+              <Button variant="primary" size="sm" className="w-full" disabled={!isAvailable}>
+                Book Now
+              </Button>
+            </Link>
           </div>
-          <span className="w-px h-3.5 bg-border" />
-          <span className="font-mono text-[11px] text-slate flex items-center gap-1">
-            <Briefcase size={11} /> {jobCount} jobs
-          </span>
-        </div>
-
-        {/* Bio */}
-        <p className="font-body text-[13px] text-body/80 line-clamp-2 mt-2 leading-relaxed">
-          {bio}
-        </p>
-
-        {/* Skills */}
-        <div className="flex flex-wrap gap-1.5 mt-3">
-          {skills.slice(0, 4).map((skill) => (
-            <span
-              key={skill}
-              className="bg-lgray/80 text-body/70 font-mono text-[10px] font-semibold rounded-full px-2.5 py-1 border border-border/30"
-            >
-              {skill}
-            </span>
-          ))}
-          {skills.length > 4 && (
-            <span className="text-slate font-mono text-[10px] font-semibold px-2 py-1">
-              +{skills.length - 4}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Right Column */}
-      <div className="flex flex-row tablet:flex-col justify-between tablet:justify-start items-center tablet:items-end gap-3 pt-3 tablet:pt-0 border-t tablet:border-t-0 border-border/30 tablet:pl-5 tablet:border-l tablet:border-border/30">
-        <div className="text-left tablet:text-right">
-          <p className="text-[9px] font-mono text-slate uppercase tracking-widest font-bold">Est. Price</p>
-          <p className="font-mono text-[17px] font-bold text-navy mt-0.5 tracking-tight">
-            {formatNairaRange(priceMin, priceMax)}
-          </p>
-        </div>
-
-        {/* Trust badges */}
-        <div className="flex gap-1">
-          {badges.map((badge) => (
-            <TrustBadge key={badge} type={badge} />
-          ))}
-        </div>
-
-        <div className="flex gap-2 w-full tablet:w-auto mt-1">
-          <Link href={`/artisans/${slug}`} className="flex-1 tablet:flex-initial">
-            <Button variant="secondary" size="sm" className="w-full text-center">
-              Profile
-            </Button>
-          </Link>
-          <Link href={`/book/${slug}`} className="flex-1 tablet:flex-initial">
-            <Button variant="primary" size="sm" className="w-full" disabled={!isAvailable}>
-              Book Now
-            </Button>
-          </Link>
         </div>
       </div>
     </div>

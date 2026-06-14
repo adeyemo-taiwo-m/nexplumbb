@@ -138,7 +138,7 @@ function SearchResultsPageContent() {
     <div className="w-full flex-grow flex flex-col min-h-[calc(100vh-64px)] select-none">
       
       {/* Sub Header Search Controls bar */}
-      <section className="bg-white border-b border-border py-4 px-6 tablet:px-10 z-10 sticky top-16">
+      <section className="bg-white border-b border-border py-4 px-6 tablet:px-10 z-40 sticky top-16">
         <form onSubmit={handleApplySearch} className="max-w-[1200px] mx-auto flex flex-col md:flex-row gap-3">
           <div className="flex-1 flex items-center border border-border rounded-btn bg-lgray/30 px-3">
             <SearchIcon size={18} className="text-slate flex-shrink-0" />
@@ -319,39 +319,50 @@ function SearchResultsPageContent() {
 
             <div className="flex items-center gap-2 flex-wrap">
               {/* Sort Dropdown */}
-              <div className="relative flex items-center border border-border bg-white rounded-btn px-2.5 py-1 text-[12px] font-mono hover:border-slate cursor-pointer">
-                <ChevronDown size={14} className="text-slate mr-1.5" />
+              <div className="relative flex items-center bg-white border border-border rounded-[10px] shadow-[0_2px_8px_rgba(13,33,55,0.04)] hover:border-teal/40 hover:shadow-[0_4px_12px_rgba(42,157,143,0.08)] transition-all group h-[38px]">
+                <div className="absolute left-3 pointer-events-none text-slate group-hover:text-teal transition-colors">
+                  <SlidersHorizontal size={14} />
+                </div>
                 <select
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value)}
-                  className="bg-transparent border-0 pr-6 py-1 focus:outline-none font-bold text-navy cursor-pointer appearance-none"
+                  className="w-full bg-transparent border-0 pl-9 pr-8 py-2 focus:outline-none font-mono text-[12px] font-bold text-navy cursor-pointer appearance-none"
                 >
-                  <option value="best_match">Best Match</option>
-                  <option value="highest_rated">Top Rated</option>
-                  <option value="most_jobs">Most Jobs</option>
-                  <option value="lowest_price">Lowest Price</option>
+                  <option value="best_match">Sort: Best Match</option>
+                  <option value="highest_rated">Sort: Top Rated</option>
+                  <option value="most_jobs">Sort: Most Jobs</option>
+                  <option value="lowest_price">Sort: Lowest Price</option>
                 </select>
+                <div className="absolute right-3 pointer-events-none text-slate group-hover:text-teal transition-colors">
+                  <ChevronDown size={14} />
+                </div>
               </div>
 
               {/* View Toggle */}
-              <div className="flex border border-border rounded-btn overflow-hidden p-0.5 bg-lgray">
+              <div className="flex bg-lgray/60 border border-border rounded-[10px] p-[3px] shadow-[inset_0_1px_4px_rgba(0,0,0,0.02)] h-[38px]">
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-1.5 rounded-btn transition-all ${
-                    viewMode === 'list' ? 'bg-white text-navy shadow-card' : 'text-slate hover:text-navy'
+                  className={`flex items-center justify-center w-10 sm:w-auto sm:px-3 rounded-[7px] transition-all font-mono text-[12px] font-bold ${
+                    viewMode === 'list' 
+                      ? 'bg-white text-navy shadow-[0_2px_6px_rgba(13,33,55,0.08)] border border-border/60' 
+                      : 'text-slate hover:text-navy border border-transparent hover:bg-white/50'
                   }`}
                   aria-label="List view"
                 >
                   <List size={16} />
+                  <span className="hidden sm:inline ml-1.5">List</span>
                 </button>
                 <button
                   onClick={() => setViewMode('map')}
-                  className={`p-1.5 rounded-btn transition-all ${
-                    viewMode === 'map' ? 'bg-white text-navy shadow-card' : 'text-slate hover:text-navy'
+                  className={`flex items-center justify-center w-10 sm:w-auto sm:px-3 rounded-[7px] transition-all font-mono text-[12px] font-bold ${
+                    viewMode === 'map' 
+                      ? 'bg-white text-navy shadow-[0_2px_6px_rgba(13,33,55,0.08)] border border-border/60' 
+                      : 'text-slate hover:text-navy border border-transparent hover:bg-white/50'
                   }`}
                   aria-label="Map view"
                 >
                   <MapIcon size={16} />
+                  <span className="hidden sm:inline ml-1.5">Map</span>
                 </button>
               </div>
             </div>
