@@ -36,6 +36,18 @@ body {
   border-radius: 4px !important;
 }
 
+/* Reset focus rings on text-based inputs, textareas, and selects where focus state is visually managed by wrapper containers or custom styles */
+input:focus:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+input:focus-visible:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+}
+
 /* Typography Scale classes helper */
 .font-display {
   font-family: var(--font-display);
