@@ -12,334 +12,470 @@ import {
   ArrowRight,
   Zap,
   CheckCircle,
-  Users,
-  Clock,
+  HelpCircle,
 } from "lucide-react";
-import { useMockDb } from "@/lib/store/mockDb";
+import { useMockDb, Artisan } from "@/lib/store/mockDb";
 import ArtisanCard from "@/components/ui/ArtisanCard";
 import Button from "@/components/ui/Button";
 import CustomerNavbar from "@/components/layout/CustomerNavbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
+import { toast } from "sonner";
 
 export default function Homepage() {
   const router = useRouter();
-  const artisans = useMockDb((state) => state.artisans);
+  const dbArtisans = useMockDb((state) => state.artisans);
 
+  // States
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [customLocation, setCustomLocation] = useState("Surulere");
-  const [detectedLocation, setDetectedLocation] = useState("Detecting...");
-  const [featuredArtisans, setFeaturedArtisans] = useState<any[]>([]);
+  const [locationName, setLocationName] = useState("Lagos");
+  const [locationStatus, setLocationStatus] = useState<'detecting' | 'detected' | 'denied' | 'error'>('detecting');
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+  const [featuredArtisans, setFeaturedArtisans] = useState<Artisan[]>([]);
   const [loadingArtisans, setLoadingArtisans] = useState(true);
+  const [apiError, setApiError] = useState(false);
+  const [waitlistStatus, setWaitlistStatus] = useState<Record<string, boolean>>({});
+
+  const availableLGAs = [
+    'Surulere',
+    'Yaba',
+    'Ikeja',
+    'Lekki',
+    'Victoria Island',
+    'Ebute Metta',
+    'Maryland',
+    'Apapa'
+  ];
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Geolocation detector
   useEffect(() => {
     if (mounted) {
-      const timer = setTimeout(() => {
-        setFeaturedArtisans(artisans.slice(0, 4));
-        setLoadingArtisans(false);
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [mounted, artisans]);
+      if (!navigator.geolocation) {
+        setLocationStatus('denied');
+        setLocationName('Lagos');
+        return;
+      }
 
-  useEffect(() => {
-    if (mounted) {
-      const t = setTimeout(() => {
-        setDetectedLocation("Surulere, Lagos");
-        setCustomLocation("Surulere");
-      }, 1000);
-      return () => clearTimeout(t);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Mock successful reverse-geocoding to Surulere for testing
+          setTimeout(() => {
+            setLocationStatus('detected');
+            setLocationName('Surulere');
+          }, 1200);
+        },
+        (error) => {
+          // Geolocation blocked or failed
+          setTimeout(() => {
+            setLocationStatus('denied');
+            setLocationName('Lagos');
+          }, 1200);
+        },
+        { timeout: 4000 }
+      );
     }
   }, [mounted]);
+
+  // Featured Artisans fetch simulator based on selected location
+  useEffect(() => {
+    if (mounted) {
+      setLoadingArtisans(true);
+      setApiError(false);
+
+      const timer = setTimeout(() => {
+        try {
+          // If we want to simulate a rare API failure, we can handle it here.
+          // In regular usage, we filter the mock DB.
+          let filtered = dbArtisans;
+          if (locationName !== 'Lagos') {
+            filtered = dbArtisans.filter(
+              (artisan) => artisan.area.toLowerCase() === locationName.toLowerCase()
+            );
+          }
+
+          // Limit to 4 featured artisans
+          setFeaturedArtisans(filtered.slice(0, 4));
+          setLoadingArtisans(false);
+        } catch (err) {
+          setApiError(true);
+          setLoadingArtisans(false);
+        }
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [mounted, locationName, dbArtisans]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     router.push(
-      `/search?q=${encodeURIComponent(searchQuery.trim())}&location=${encodeURIComponent(customLocation)}`,
+      `/search?q=${encodeURIComponent(searchQuery.trim())}&location=${encodeURIComponent(locationName)}`
     );
   };
 
   const handleCategoryClick = (category: string) => {
     router.push(
-      `/search?category=${encodeURIComponent(category.toLowerCase())}&location=${encodeURIComponent(customLocation)}`,
+      `/search?category=${encodeURIComponent(category.toLowerCase())}&location=${encodeURIComponent(locationName)}`
     );
+  };
+
+  const handleJoinWaitlist = (lga: string) => {
+    setWaitlistStatus((prev) => ({ ...prev, [lga]: true }));
+    toast.success(`Successfully joined the artisan waitlist for ${lga}! We'll notify you as soon as they register.`);
   };
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0D2137] via-[#122A44] to-[#0A1A2B] flex items-center justify-center">
+      <div className="min-h-screen bg-navy flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-teal border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
+  // Trust Metrics (exactly 3 as specified)
   const trustMetrics = [
-    {
-      icon: ShieldCheck,
-      value: "1,200+",
-      label: "Verified Artisans",
-      color: "teal",
-    },
-    {
-      icon: Lock,
-      value: "Escrow",
-      label: "Protected Payments",
-      color: "orange",
-    },
-    { icon: Star, value: "4.8 / 5", label: "Average Rating", color: "amber" },
-    { icon: Users, value: "5,000+", label: "Happy Customers", color: "nxblue" },
+    { icon: ShieldCheck, value: "1,200+", label: "Verified Artisans" },
+    { icon: Lock, value: "Escrow", label: "Protected Payments" },
+    { icon: Star, value: "4.8 / 5", label: "Average Rating" },
   ];
 
+  // How It Works Steps
   const steps = [
     {
       number: 1,
       icon: Search,
       title: "Search",
-      description:
-        "Type what you need or pick a category. We'll show you verified artisans near your location in seconds.",
+      description: "Type what you need or pick a category. We'll show you verified artisans near your location in seconds."
     },
     {
       number: 2,
-      icon: Lock,
-      title: "Book & Pay Safely",
-      description:
-        "Choose your artisan, pick a time, and pay through secure escrow. Your money is protected until the job is done.",
+      icon: ShieldCheck,
+      title: "Book & pay safely",
+      description: "Choose your artisan, pick a time, and pay through secure escrow. Your money is protected until the job is done."
     },
     {
       number: 3,
       icon: MapPin,
-      title: "Track & Confirm",
-      description:
-        "Watch your artisan travel to you on a live map. Confirm when the job is complete and release payment.",
+      title: "Track & confirm",
+      description: "Watch your artisan travel to you on a live map. Confirm when the job is complete and release payment."
     },
   ];
 
+  // Category SEO Configuration
   const seoSections = [
     {
       id: "plumbers-in-lagos",
       title: "Plumbers in Lagos",
-      desc: "Access highly rated plumbing professionals for leak repairs, drain unblocking, faucet installations, and pipe layouts. Secure escrow payments ensure full service satisfaction.",
+      desc: "Find verified, NIN-checked plumbers near you in Lagos. Escrow-protected payments.",
       trade: "Plumbing",
-      label: "plumbers",
+      label: "plumbing",
     },
     {
       id: "electricians-in-lagos",
       title: "Electricians in Lagos",
-      desc: "Expert electricians for domestic re-wiring, generator changeover switches, socket replacements, and troubleshooting power outages. Fast response and fully verified profiles.",
+      desc: "Find verified, NIN-checked electricians near you in Lagos. Escrow-protected payments.",
       trade: "Electrical",
-      label: "electricians",
+      label: "electrical",
     },
     {
       id: "carpenters-in-lagos",
       title: "Carpenters in Lagos",
-      desc: "Custom woodworking, cabinet makers, door installations, and roof repairs. Connecting you to verified local carpenters with guaranteed expertise across Lagos.",
+      desc: "Find verified, NIN-checked carpenters near you in Lagos. Escrow-protected payments.",
       trade: "Carpentry",
-      label: "carpenters",
+      label: "carpentry",
     },
     {
       id: "painters-in-lagos",
       title: "Painters in Lagos",
-      desc: "Professional screeding and painting services for residential and commercial layouts. Transform your spaces with vetted local artisans offering transparent pricing.",
+      desc: "Find verified, NIN-checked painters near you in Lagos. Escrow-protected payments.",
       trade: "Painting",
-      label: "painters",
+      label: "painting",
     },
     {
       id: "tilers-in-lagos",
       title: "Tilers in Lagos",
-      desc: "Porcelain, ceramic, marble, and mosaic tile professionals. Floor tiling, wall tiling, and bathroom renovations by trusted, identity-verified artisans.",
+      desc: "Find verified, NIN-checked tilers near you in Lagos. Escrow-protected payments.",
       trade: "Tiling",
-      label: "tilers",
+      label: "tiling",
     },
   ];
 
+  // Social Proof Reviews
   const socialProofReviews = [
     {
-      name: "Chisom A.",
+      name: "Chisom",
       area: "Surulere",
       stars: 5,
       text: "Nexplumb completely saved my day! A kitchen pipe burst at 9:00 AM. I booked Emeka, tracked him, and by 11:30 AM the pipe was replaced. The escrow system felt super secure!",
     },
     {
-      name: "Kunle O.",
+      name: "Kunle",
       area: "Yaba",
-      stars: 4,
-      text: "Very smooth experience. Tunde was professional, did neat wiring, and cleared up afterwards. Love that I can pay by bank transfer directly on the app.",
+      stars: 5,
+      text: "Very smooth experience. Babatunde was professional, did neat wiring, and cleared up afterwards. Love that I can pay securely and have funds held in escrow until completion.",
     },
     {
-      name: "Nkechi E.",
+      name: "Nkechi",
       area: "Lekki",
       stars: 5,
-      text: "Having a verified artisan come into my home makes me feel safe. Knowing their NIN has been checked by Nexplumb is a game changer for safety in Lagos.",
+      text: "Having a verified artisan come into my home makes me feel safe. Knowing their NIN has been checked by Nexplumb is a game changer for home repairs in Lagos.",
     },
   ];
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {/* Structured SEO Data (JSON-LD) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "NexPlumb",
+            "image": "https://nexplumb.com/logo.png",
+            "description": "Nigeria's trust-first artisan marketplace connecting urban residents to vetted, insured professionals through secure escrow.",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Lagos",
+              "addressCountry": "NG"
+            },
+            "url": "https://nexplumb.com"
+          })
+        }}
+      />
+
       <CustomerNavbar />
 
       <main className="flex-grow flex flex-col">
-        {/* ══════════════ HERO ══════════════ */}
-        <section className="w-full bg-gradient-to-br from-[#0D2137] via-[#122A44] to-[#0A1A2B] text-white relative overflow-hidden">
-          {/* Decorative elements */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange/5 rounded-full blur-3xl pointer-events-none" />
+        {/* ══════════════ SECTION 1: HERO ══════════════ */}
+        <section className="w-full bg-navy text-white min-h-[580px] relative overflow-hidden flex items-center">
+          {/* Subtle Ambient Decorative Glows */}
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal/5 rounded-full blur-[140px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange/5 rounded-full blur-[140px] pointer-events-none" />
 
-          <div className="max-w-[1200px] mx-auto w-full px-6 tablet:px-10 py-20 md:py-28 grid grid-cols-1 desktop:grid-cols-12 gap-12 items-center relative z-10">
-            {/* Left */}
-            <div className="desktop:col-span-7 flex flex-col items-start">
+          <div className="max-w-[1200px] mx-auto w-full px-6 tablet:px-10 py-24 md:py-32 grid grid-cols-1 desktop:grid-cols-12 gap-12 items-center relative z-10">
+            
+            {/* Left Column (55%) */}
+            <div className="desktop:col-span-7 flex flex-col items-start text-left">
               <div className="animate-fade-in-up">
-                <span className="inline-flex items-center gap-2 bg-teal/15 text-teal border border-teal/20 rounded-full px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider mb-6">
-                  <Zap size={12} /> Nigeria&apos;s #1 Artisan Marketplace
+                <span className="inline-flex items-center gap-2 bg-teal/10 text-teal border border-teal/20 rounded-full px-4.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider mb-6">
+                  <Zap size={12} className="animate-pulse" /> Nigeria&apos;s #1 Escrow Artisan Marketplace
                 </span>
               </div>
 
-              <h1 className="font-display font-bold text-[40px] tablet:text-[52px] text-white leading-[1.1] animate-fade-in-up delay-100">
+              {/* H1 Headline */}
+              <h1 className="font-display font-bold text-[44px] tablet:text-[54px] text-white leading-tight animate-fade-in-up delay-100">
                 Your trusted artisan, <br />
-                <span className="gradient-text">one tap away</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal via-nxblue to-orange">one tap away</span>
               </h1>
 
-              <p className="font-body text-[16px] tablet:text-[18px] text-white/80 mt-5 max-w-[560px] leading-relaxed animate-fade-in-up delay-200">
-                Find verified plumbers, electricians, carpenters and painters
-                near you in Lagos, Nigeria — instantly. Your funds are protected
-                in escrow until the work is complete.
+              {/* Subheadline (with Lagos keyword for SEO) */}
+              <p className="font-body text-[18px] text-white/80 mt-4 max-w-[520px] leading-relaxed animate-fade-in-up delay-200">
+                Find verified plumbers, electricians, and tradespeople near you in Lagos — instantly
               </p>
 
-              {/* Search Panel */}
+              {/* Search Bar (White Card style) */}
               <form
                 onSubmit={handleSearch}
-                className="w-full max-w-[620px] glass-card rounded-modal mt-8 p-3 animate-fade-in-up delay-300"
+                className="w-full max-w-[640px] bg-white rounded-card shadow-modal mt-10 p-2 flex gap-2 items-center relative animate-fade-in-up delay-300"
               >
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <div className="flex-1 flex items-center gap-2.5 bg-white/10 rounded-card px-4 py-3 border border-white/10 focus-within:bg-white/15 transition-colors">
-                    <Search size={18} className="text-white/50 flex-shrink-0" />
-                    <input
-                      type="text"
-                      placeholder="What do you need? e.g. leaking pipe..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-transparent text-white font-mono text-[13px] focus:outline-none focus-visible:!outline-none placeholder:text-white/40"
-                      required
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/10 rounded-card px-4 py-3 border border-white/10 sm:w-40 focus-within:bg-white/15 transition-colors">
-                    <MapPin size={16} className="text-orange flex-shrink-0" />
-                    <input
-                      type="text"
-                      placeholder="Area / LGA"
-                      value={customLocation}
-                      onChange={(e) => setCustomLocation(e.target.value)}
-                      className="w-full bg-transparent text-white font-mono text-[13px] focus:outline-none focus-visible:!outline-none placeholder:text-white/40"
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    size="md"
-                    className="w-full sm:w-28 flex-shrink-0"
-                  >
-                    Search
-                  </Button>
+                <div className="flex-1 flex items-center gap-2 px-3">
+                  <Search size={18} className="text-slate" />
+                  <input
+                    type="text"
+                    placeholder="What do you need? e.g. leaking pipe, electrical fault..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-transparent text-body font-mono text-[14px] focus:outline-none placeholder:text-slate"
+                    required
+                  />
                 </div>
-                <div className="mt-3 flex items-center gap-1.5 font-mono text-[10px] text-white/50 px-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
-                  {detectedLocation}
-                </div>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="md"
+                  className="w-32 flex-shrink-0"
+                >
+                  Search
+                </Button>
               </form>
 
-              {/* Category Chips */}
-              <div className="flex flex-wrap gap-2 mt-6 w-full animate-fade-in-up delay-400">
+              {/* Location Selector (under search bar) */}
+              <div className="mt-3 flex items-center gap-2 font-mono text-[12px] text-white/70 relative">
+                <span>📍</span>
+                {locationStatus === 'detecting' ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
+                    Auto-detecting your location...
+                  </span>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <span>{locationName === 'Lagos' ? 'Lagos, Nigeria' : `${locationName}, Lagos`}</span>
+                    {locationStatus === 'denied' && (
+                      <span className="text-white/40 text-[10px]">(Location denied, showing Lagos-wide)</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setShowLocationDropdown(!showLocationDropdown)}
+                      className="text-teal hover:text-teal-light underline font-bold focus:outline-none transition-colors"
+                    >
+                      [change]
+                    </button>
+                  </div>
+                )}
+
+                {/* LGA Dropdown */}
+                {showLocationDropdown && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setShowLocationDropdown(false)} />
+                    <div className="absolute left-0 mt-8 w-56 bg-white border border-border rounded-card shadow-modal py-2 z-50 text-body font-display text-[13px]">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setLocationName('Lagos');
+                          setLocationStatus('denied'); // Default to Lagos wide
+                          setShowLocationDropdown(false);
+                        }}
+                        className="w-full text-left px-4 py-2 hover:bg-lgray transition-colors font-bold text-navy"
+                      >
+                        All Lagos (Lagos-wide)
+                      </button>
+                      <div className="border-t border-border/40 my-1" />
+                      {availableLGAs.map((lga) => (
+                        <button
+                          key={lga}
+                          type="button"
+                          onClick={() => {
+                            setLocationName(lga);
+                            setLocationStatus('detected');
+                            setShowLocationDropdown(false);
+                          }}
+                          className="w-full text-left px-4 py-2 hover:bg-lgray transition-colors"
+                        >
+                          {lga}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Service Category Chips */}
+              <div className="flex flex-wrap gap-2.5 mt-6 w-full animate-fade-in-up delay-400">
                 {[
-                  "🔧 Plumbing",
-                  "⚡ Electrical",
-                  "🪚 Carpentry",
-                  "🎨 Painting",
-                  "🔲 Tiling",
-                ].map((cat) => (
+                  { label: "🔧 Plumbing", slug: "plumbing" },
+                  { label: "⚡ Electrical", slug: "electrical" },
+                  { label: "🪚 Carpentry", slug: "carpentry" },
+                  { label: "🎨 Painting", slug: "painting" },
+                  { label: "🔲 Tiling", slug: "tiling" }
+                ].map((chip) => (
                   <button
-                    key={cat}
+                    key={chip.slug}
                     type="button"
-                    onClick={() => handleCategoryClick(cat.split(" ")[1])}
-                    className="bg-white/8 text-white/90 font-display text-[12px] font-semibold border border-white/15 rounded-full px-4 py-2 hover:bg-white/15 hover:border-white/30 transition-all active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal"
+                    onClick={() => handleCategoryClick(chip.slug)}
+                    className="bg-white/20 text-white border border-white/30 rounded-full px-4 py-2 hover:bg-white/30 hover:border-white/50 transition-all cursor-pointer font-display text-[13px] font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal"
                   >
-                    {cat}
+                    {chip.label}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Right — Floating Trust Visual */}
-            <div className="hidden desktop:flex desktop:col-span-5 flex-col items-center justify-center relative">
-              <div className="animate-fade-in-up delay-300 w-full">
-                <div className="glass-card rounded-modal p-8 text-center relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-28 h-28 bg-teal/8 rounded-bl-full pointer-events-none" />
-                  <div className="absolute bottom-0 left-0 w-20 h-20 bg-orange/8 rounded-tr-full pointer-events-none" />
+            {/* Right Column Illustration (45%, Desktop Only) */}
+            <div className="hidden tablet:block desktop:col-span-5 relative justify-center items-center">
+              <div className="w-full max-w-[420px] mx-auto animate-fade-in-up delay-300">
+                {/* Visual Graphic Representation of Nigerian Home Scene & Shield */}
+                <svg
+                  viewBox="0 0 400 400"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-full h-auto drop-shadow-2xl"
+                >
+                  {/* Decorative background grid and circles */}
+                  <circle cx="200" cy="200" r="180" fill="url(#hero-circle-grad)" />
+                  <circle cx="200" cy="200" r="140" fill="none" stroke="rgba(42, 157, 143, 0.15)" strokeWidth="1.5" strokeDasharray="6 6" />
+                  
+                  {/* Modern Room elements: Couch shape */}
+                  <rect x="90" y="240" width="220" height="70" rx="14" fill="#122A44" stroke="rgba(255,255,255,0.08)" strokeWidth="2" />
+                  <rect x="110" y="220" width="180" height="40" rx="8" fill="#0D2137" />
+                  {/* Plant decoration */}
+                  <path d="M 70 310 Q 50 240 85 200 Q 110 240 70 310" fill="url(#plant-grad)" opacity="0.85" />
+                  <circle cx="75" cy="300" r="10" fill="#E76F51" />
 
-                  <div className="animate-float">
-                    <div className="w-20 h-20 bg-orange/15 rounded-full flex items-center justify-center text-orange mx-auto mb-5 border border-orange/20 animate-border-glow">
-                      <ShieldCheck size={40} />
-                    </div>
-                  </div>
+                  {/* Escrow Shield Symbol floating */}
+                  <g filter="url(#shield-shadow)">
+                    <path
+                      d="M 200 80 Q 250 80 270 120 Q 270 190 200 230 Q 130 190 130 120 Q 150 80 200 80 Z"
+                      fill="#2A9D8F"
+                      stroke="#FFFFFF"
+                      strokeWidth="3"
+                    />
+                    {/* Checkmark inside shield */}
+                    <path
+                      d="M 180 155 L 195 170 L 225 130"
+                      stroke="#FFFFFF"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </g>
 
-                  <h3 className="text-white text-[20px] font-display font-bold">
-                    Trust-First Platform
-                  </h3>
-                  <p className="text-white/65 font-body text-[14px] mt-2 max-w-[280px] mx-auto leading-relaxed">
-                    Every artisan undergoes NIMC NIN checks, BVN verification,
-                    and guarantor audits.
-                  </p>
+                  {/* Floating badge for Verified */}
+                  <g transform="translate(260, 240)">
+                    <rect x="0" y="0" width="110" height="36" rx="18" fill="rgba(13,33,55,0.9)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                    <circle cx="18" cy="18" r="8" fill="#2E86AB" />
+                    <text x="34" y="22" fill="#FFFFFF" fontSize="10" fontFamily="Sora, sans-serif" fontWeight="bold">NIN Vetted</text>
+                  </g>
 
-                  {/* Mini stats */}
-                  <div className="grid grid-cols-3 gap-3 mt-6">
-                    {[
-                      { label: "Verified", value: "1.2K+", icon: CheckCircle },
-                      { label: "Avg. ETA", value: "35min", icon: Clock },
-                      { label: "Rating", value: "4.8★", icon: Star },
-                    ].map((stat) => (
-                      <div
-                        key={stat.label}
-                        className="bg-white/5 rounded-card py-3 px-2 border border-white/8"
-                      >
-                        <p className="font-mono text-[14px] font-bold text-white">
-                          {stat.value}
-                        </p>
-                        <p className="font-mono text-[9px] text-white/50 uppercase tracking-wider mt-0.5">
-                          {stat.label}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                  {/* Floating badge for Escrow */}
+                  <g transform="translate(30, 130)">
+                    <rect x="0" y="0" width="100" height="36" rx="18" fill="rgba(13,33,55,0.9)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                    <circle cx="18" cy="18" r="8" fill="#E76F51" />
+                    <text x="34" y="22" fill="#FFFFFF" fontSize="10" fontFamily="Sora, sans-serif" fontWeight="bold">Escrow Safe</text>
+                  </g>
+
+                  {/* Gradients */}
+                  <defs>
+                    <linearGradient id="hero-circle-grad" x1="200" y1="20" x2="200" y2="380" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="rgba(42, 157, 143, 0.08)" />
+                      <stop offset="1" stopColor="rgba(231, 111, 81, 0.03)" />
+                    </linearGradient>
+                    <linearGradient id="plant-grad" x1="70" y1="200" x2="70" y2="310" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#2A9D8F" />
+                      <stop offset="1" stopColor="#122A44" />
+                    </linearGradient>
+                    <filter id="shield-shadow" x="110" y="60" width="180" height="200" filterUnits="userSpaceOnUse">
+                      <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#0D2137" floodOpacity="0.4" />
+                    </filter>
+                  </defs>
+                </svg>
               </div>
             </div>
+
           </div>
         </section>
 
-        {/* ══════════════ TRUST BAR ══════════════ */}
-        <section className="w-full bg-gradient-to-r from-[#0A1A2B] to-[#0D2137] border-t border-white/5 py-8">
-          <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-2 tablet:grid-cols-4 gap-6">
+        {/* ══════════════ SECTION 2: TRUST BAR ══════════════ */}
+        <section className="w-full bg-navy/95 border-t border-white/10 py-6">
+          <div className="max-w-[1200px] mx-auto px-6 flex flex-row flex-wrap justify-center gap-16 tablet:gap-8 mobile:flex-col mobile:items-center mobile:gap-4">
             {trustMetrics.map((metric, idx) => {
               const Icon = metric.icon;
               return (
                 <div
                   key={idx}
-                  className="flex items-center gap-3 text-white animate-fade-in-up"
-                  style={{ animationDelay: `${idx * 100}ms` }}
+                  className="flex items-center gap-3 text-white"
                 >
-                  <div
-                    className={`p-2.5 rounded-card bg-${metric.color}/10 text-${metric.color} border border-${metric.color}/15`}
-                  >
-                    <Icon size={20} />
-                  </div>
-                  <div>
-                    <p className="text-[18px] font-display font-bold leading-none">
+                  <Icon size={32} className="text-teal" />
+                  <div className="text-left">
+                    <p className="text-[22px] font-bold leading-none">
                       {metric.value}
                     </p>
-                    <p className="text-[10px] font-mono text-white/55 mt-1 uppercase tracking-wider">
+                    <p className="text-[14px] text-white/70 mt-1">
                       {metric.label}
                     </p>
                   </div>
@@ -349,43 +485,35 @@ export default function Homepage() {
           </div>
         </section>
 
-        {/* ══════════════ HOW IT WORKS ══════════════ */}
-        <section
-          id="how-it-works"
-          className="w-full bg-white py-24 border-b border-border"
-        >
+        {/* ══════════════ SECTION 3: HOW IT WORKS ══════════════ */}
+        <section id="how-it-works" className="bg-white py-20 border-b border-border">
           <div className="max-w-[1200px] mx-auto px-6 tablet:px-10 text-center">
-            <span className="inline-block font-mono text-[11px] font-bold text-teal uppercase tracking-widest mb-3">
-              Simple Process
-            </span>
-            <h2 className="text-h2 text-navy mb-4">
+            {/* Title */}
+            <h2 className="text-h2 font-display font-bold text-navy text-center mb-12">
               Book a trusted artisan in 3 steps
             </h2>
-            <p className="font-body text-[16px] text-slate max-w-[520px] mx-auto mb-16">
-              Our secure process protects your time, your money, and your home
-              from start to finish.
-            </p>
 
-            <div className="grid grid-cols-1 tablet:grid-cols-3 gap-6 text-left">
-              {steps.map((step, idx) => {
+            {/* Steps Layout */}
+            <div className="grid grid-cols-1 tablet:grid-cols-3 gap-8 text-left">
+              {steps.map((step) => {
                 const Icon = step.icon;
                 return (
                   <div
                     key={step.number}
-                    className="card-hover-lift flex flex-col items-start p-7 rounded-card border border-border bg-lgray/30 group"
+                    className="flex flex-col items-start p-6 rounded-card border border-border bg-lgray/10 hover:border-teal/30 hover:shadow-card transition-all duration-200"
                   >
-                    <div className="flex justify-between items-center w-full">
-                      <span className="w-11 h-11 bg-orange text-white rounded-full font-display font-bold text-[16px] flex items-center justify-center select-none shadow-lg group-hover:scale-110 transition-transform">
-                        {step.number}
-                      </span>
-                      <div className="p-2 bg-teal/8 rounded-card group-hover:bg-teal/15 transition-colors">
-                        <Icon size={24} className="text-teal" />
-                      </div>
+                    {/* Circle Number */}
+                    <div className="w-12 h-12 bg-orange text-white rounded-full font-bold text-[18px] flex items-center justify-center shadow-md mb-6">
+                      {step.number}
                     </div>
-                    <h3 className="font-display font-bold text-[18px] text-navy mt-6">
+                    {/* Icon */}
+                    <Icon size={40} className="text-teal mb-4" />
+                    {/* Title */}
+                    <h3 className="text-h3 font-display font-semibold text-navy">
                       {step.title}
                     </h3>
-                    <p className="font-body text-[14px] text-slate mt-2.5 leading-relaxed">
+                    {/* Description */}
+                    <p className="font-body text-[14px] text-slate mt-2 leading-relaxed">
                       {step.description}
                     </p>
                   </div>
@@ -393,13 +521,10 @@ export default function Homepage() {
               })}
             </div>
 
-            <div className="mt-16">
+            {/* CTA button */}
+            <div className="mt-12 text-center">
               <Link href="/search">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className="px-10 py-4 shadow-lg hover:shadow-xl transition-shadow"
-                >
+                <Button variant="primary" size="md" className="px-8 font-bold">
                   Find an artisan now
                 </Button>
               </Link>
@@ -407,160 +532,194 @@ export default function Homepage() {
           </div>
         </section>
 
-        {/* ══════════════ FEATURED ARTISANS ══════════════ */}
-        <section className="w-full bg-lgray/30 py-24 border-b border-border">
+        {/* ══════════════ SECTION 4: FEATURED ARTISANS ══════════════ */}
+        <section className="w-full bg-lgray py-20 border-b border-border">
           <div className="max-w-[1200px] mx-auto px-6 tablet:px-10">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
-              <div>
-                <span className="inline-block font-mono text-[11px] font-bold text-teal uppercase tracking-widest mb-2">
-                  Top Rated
-                </span>
-                <h2 className="text-h2 text-navy">
-                  Featured artisans near you
+            
+            {/* Header row */}
+            <div className="flex items-end justify-between mb-8">
+              <div className="text-left">
+                <h2 className="text-h2 font-display font-bold text-navy leading-tight">
+                  Top-rated artisans near you
                 </h2>
-                <p className="font-mono text-[12px] text-teal mt-2 font-bold flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-teal inline-block animate-pulse" />
-                  Vetted &amp; Active in Lagos
+                <p className="font-mono text-[13px] text-teal font-bold mt-1">
+                  {locationStatus === 'denied' ? 'in Lagos' : `in ${locationName}`}
                 </p>
               </div>
               <Link
                 href="/search"
-                className="font-mono text-[13px] text-nxblue font-bold hover:underline flex items-center gap-1.5 select-none group"
+                className="font-display text-[14px] font-semibold text-nxblue hover:underline whitespace-nowrap"
               >
-                See all artisans{" "}
-                <ArrowRight
-                  size={14}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
+                See all artisans
               </Link>
             </div>
 
+            {/* Content States */}
             {loadingArtisans ? (
+              /* Loading Skeletons */
               <div className="grid grid-cols-1 sm:grid-cols-2 desktop:grid-cols-4 gap-6">
                 {Array.from({ length: 4 }).map((_, idx) => (
                   <div
                     key={idx}
-                    className="bg-white rounded-card border border-border p-6 flex flex-col items-center animate-pulse shadow-sm"
+                    className="bg-white rounded-card border border-border p-5 flex flex-col items-center animate-pulse shadow-sm"
                   >
-                    <div className="w-16 h-16 rounded-full bg-lgray-dark" />
-                    <div className="h-4 bg-lgray-dark rounded w-2/3 mt-5" />
-                    <div className="h-3 bg-lgray-dark rounded w-1/2 mt-2" />
-                    <div className="h-10 bg-lgray-dark rounded w-full mt-6" />
+                    <div className="w-16 h-16 rounded-full bg-border/40" />
+                    <div className="h-4 bg-border/40 rounded w-2/3 mt-5" />
+                    <div className="h-3 bg-border/40 rounded w-1/2 mt-2" />
+                    <div className="h-10 bg-border/40 rounded w-full mt-6" />
                   </div>
                 ))}
               </div>
+            ) : apiError ? (
+              /* API Error Graceful Fallback (hides content grid, shows subtle retry) */
+              <div className="py-4 text-center text-slate font-mono text-[13px]">
+                Unable to load artisans. Try searching above.
+              </div>
             ) : featuredArtisans.length === 0 ? (
-              <div className="bg-white border border-border rounded-card p-12 text-center">
-                <p className="text-slate font-body">
-                  No artisans found yet. Be the first to sign up!
+              /* No Artisans / Waitlist State */
+              <div className="bg-white border border-border rounded-card p-10 text-center max-w-[600px] mx-auto shadow-card">
+                <p className="font-display font-bold text-navy text-[16px] mb-2">
+                  Coming soon — artisans signing up now in {locationName}
                 </p>
-                <Link href="/join-as-artisan">
-                  <Button variant="secondary" size="sm" className="mt-4">
-                    Register Now
-                  </Button>
-                </Link>
+                <p className="font-body text-slate text-[14px] mb-6">
+                  We are currently onboarding top-rated plumbers, electricians, and tilers in your neighborhood.
+                </p>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => handleJoinWaitlist(locationName)}
+                  disabled={!!waitlistStatus[locationName]}
+                >
+                  {waitlistStatus[locationName] ? "Joined Waitlist ✓" : "Join waitlist"}
+                </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 desktop:grid-cols-4 gap-6">
-                {featuredArtisans.map((artisan) => (
-                  <ArtisanCard
-                    key={artisan.id}
-                    variant="vertical"
-                    {...artisan}
-                  />
-                ))}
+              /* Grid layouts */
+              <div>
+                {/* Desktop/Tablet Grid */}
+                <div className="hidden sm:grid sm:grid-cols-2 desktop:grid-cols-4 gap-6">
+                  {featuredArtisans.map((artisan) => (
+                    <ArtisanCard
+                      key={artisan.id}
+                      variant="vertical"
+                      {...artisan}
+                    />
+                  ))}
+                </div>
+
+                {/* Mobile Horizontal Scroll */}
+                <div className="sm:hidden overflow-x-auto pb-4 flex gap-4 w-full scrollbar-hide">
+                  {featuredArtisans.map((artisan) => (
+                    <div key={artisan.id} className="min-w-[280px] w-[280px] flex-shrink-0">
+                      <ArtisanCard
+                        variant="vertical"
+                        {...artisan}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
         </section>
 
-        {/* ══════════════ SEO TRADE SECTIONS ══════════════ */}
+        {/* ══════════════ SECTION 5: CATEGORY SEO SECTIONS ══════════════ */}
         {seoSections.map((sec, index) => {
-          const matchingArtisans = artisans
-            .filter((a) => a.trade === sec.trade)
-            .slice(0, 2);
+          // Filter first 3 matching artisans for this trade
+          const matchingArtisans = dbArtisans
+            .filter((a) => a.trade.toLowerCase() === sec.trade.toLowerCase())
+            .slice(0, 3);
+
           return (
             <section
               key={sec.id}
               id={sec.id}
-              className={`w-full py-20 border-b border-border ${index % 2 === 0 ? "bg-white" : "bg-lgray/20"}`}
+              className={`w-full py-20 border-b border-border ${
+                index % 2 === 0 ? "bg-white" : "bg-lgray"
+              }`}
             >
-              <div className="max-w-[1200px] mx-auto px-6 tablet:px-10 grid grid-cols-1 desktop:grid-cols-12 gap-10 items-center">
-                <div className="desktop:col-span-5">
-                  <span className="inline-block font-mono text-[11px] font-bold text-teal uppercase tracking-widest mb-2">
-                    Trade Category
-                  </span>
-                  <h2 className="text-h2 text-navy mb-4">{sec.title}</h2>
-                  <p className="font-body text-[15px] text-body leading-relaxed max-w-[480px]">
+              <div className="max-w-[1200px] mx-auto px-6 tablet:px-10">
+                <div className="max-w-[700px] text-left mb-10">
+                  {/* H2 Title with Trade + City */}
+                  <h2 className="text-h2 font-display font-bold text-navy">
+                    {sec.title}
+                  </h2>
+                  <p className="font-body text-[16px] text-slate mt-2 leading-relaxed">
                     {sec.desc}
                   </p>
-                  <div className="mt-5 flex flex-wrap gap-2 select-none">
-                    <span className="font-mono text-[10px] font-bold bg-teal/8 text-teal border border-teal/15 px-3 py-1.5 rounded-full">
-                      Escrow Guarded
-                    </span>
-                    <span className="font-mono text-[10px] font-bold bg-nxblue/8 text-nxblue border border-nxblue/15 px-3 py-1.5 rounded-full">
-                      NIN Verified
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleCategoryClick(sec.trade)}
-                    className="mt-6 font-mono text-[13px] font-bold text-orange hover:underline flex items-center gap-1 group focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal"
+                </div>
+
+                {/* 3 Artisan Grid Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                  {matchingArtisans.length === 0 ? (
+                    <div className="col-span-3 py-10 bg-white/40 border border-border border-dashed rounded-card text-center text-slate font-body text-[14px]">
+                      Onboarding verified local {sec.label}s near you...
+                    </div>
+                  ) : (
+                    matchingArtisans.map((artisan) => (
+                      <ArtisanCard
+                        key={artisan.id}
+                        variant="vertical"
+                        {...artisan}
+                      />
+                    ))
+                  )}
+                </div>
+
+                <div className="mt-8 text-left">
+                  <Link
+                    href={`/search?category=${sec.label}`}
+                    className="font-mono text-[13px] font-bold text-nxblue hover:underline inline-flex items-center gap-1.5 group select-none"
                   >
-                    Find more {sec.label} near you{" "}
+                    Find more {sec.label}s near you{" "}
                     <ArrowRight
                       size={14}
                       className="group-hover:translate-x-1 transition-transform"
                     />
-                  </button>
-                </div>
-                <div className="desktop:col-span-7 flex flex-col gap-4">
-                  {matchingArtisans.length === 0 ? (
-                    <div className="p-6 bg-lgray/30 border border-border border-dashed rounded-card text-center text-slate text-[14px]">
-                      Onboarding {sec.label} in your area...
-                    </div>
-                  ) : (
-                    matchingArtisans.map((art) => (
-                      <ArtisanCard key={art.id} variant="horizontal" {...art} />
-                    ))
-                  )}
+                  </Link>
                 </div>
               </div>
             </section>
           );
         })}
 
-        {/* ══════════════ SOCIAL PROOF ══════════════ */}
-        <section className="w-full bg-white py-24">
+        {/* ══════════════ SECTION 6: SOCIAL PROOF ══════════════ */}
+        <section className="w-full bg-white py-20">
           <div className="max-w-[1200px] mx-auto px-6 tablet:px-10 text-center">
+            {/* Title */}
             <span className="inline-block font-mono text-[11px] font-bold text-teal uppercase tracking-widest mb-3">
               Testimonials
             </span>
-            <h2 className="text-h2 text-navy mb-14">
+            <h2 className="text-h2 font-display font-bold text-navy mb-12">
               What Lagos residents say
             </h2>
 
-            <div className="grid grid-cols-1 tablet:grid-cols-3 gap-6 text-left">
+            {/* Grid Layout (3 cards) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
               {socialProofReviews.map((rev, idx) => (
                 <div
                   key={idx}
-                  className="card-hover-lift bg-lgray/40 rounded-card p-6 border border-border flex flex-col justify-between"
+                  className="bg-lgray rounded-card p-6 border border-border shadow-card flex flex-col justify-between hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <div>
+                    {/* Stars */}
                     <div className="flex items-center gap-0.5 text-amber mb-4 select-none">
                       {Array.from({ length: rev.stars }).map((_, i) => (
                         <Star key={i} size={14} className="fill-current" />
                       ))}
                     </div>
+                    {/* Review text */}
                     <p className="font-body text-[14px] text-body italic leading-relaxed">
                       &ldquo;{rev.text}&rdquo;
                     </p>
                   </div>
+
+                  {/* Profile info footer */}
                   <div className="mt-6 flex items-center gap-3 border-t border-border pt-4">
                     <div className="w-9 h-9 bg-navy text-white rounded-full font-display font-bold text-[13px] flex items-center justify-center select-none uppercase">
                       {rev.name[0]}
                     </div>
-                    <div>
+                    <div className="text-left">
                       <h4 className="font-display font-bold text-[13px] text-navy leading-none">
                         {rev.name}
                       </h4>
