@@ -210,9 +210,9 @@ export default function Homepage() {
             {/* Left Column (55%) */}
             <div className="desktop:col-span-7 flex flex-col items-start text-left">
               <div className="animate-fade-in-up">
-                <span className="inline-flex items-center gap-2 bg-teal/10 text-teal border border-teal/20 rounded-full px-4.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider mb-6">
-                  <Zap size={12} className="animate-pulse" /> Nigeria&apos;s #1
-                  Escrow Artisan Marketplace
+                <span className="inline-flex items-center gap-2 bg-white/5 text-white border border-teal/30 rounded-full px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider mb-6 shadow-sm">
+                  <Zap size={12} className="text-orange fill-orange/20 animate-pulse flex-shrink-0" />
+                  <span>Nigeria&apos;s #1 Escrow Artisan Marketplace</span>
                 </span>
               </div>
 
