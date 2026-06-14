@@ -77,10 +77,12 @@ function StepCard({ step, index }: StepCardProps) {
       ref={ref}
       className="bg-white/10 border border-white/20 rounded-card p-5 text-white text-center flex flex-col items-center w-full tablet:w-[220px] flex-shrink-0"
     >
-      <div className="w-8 h-8 bg-orange text-white rounded-full flex items-center justify-center text-[13px] font-bold">
-        {step.number}
+      <div className="flex flex-col items-center justify-center gap-3">
+        <Icon size={40} className="text-teal" />
+        <div className="w-8 h-8 bg-orange text-white rounded-full flex items-center justify-center text-[13px] font-bold">
+          {step.number}
+        </div>
       </div>
-      <Icon size={40} className="text-teal mt-3" />
       <p className="font-bold text-[15px] mt-3 leading-snug">{step.label}</p>
       <p className="text-white/60 text-[12px] mt-1 leading-relaxed">{step.sub}</p>
     </div>
