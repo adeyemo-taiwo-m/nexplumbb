@@ -164,55 +164,63 @@ export default function CustomerSignUp() {
   return (
     <div className="w-full flex-grow flex min-h-[calc(100vh-64px)] select-none">
       
-      {/* LEFT PANEL: TRUST COLLATERAL (40%) */}
-      <div className="hidden md:flex md:w-[40%] bg-navy text-white flex-col justify-between p-10 border-r border-white/5">
-        <div>
-          <span className="font-display font-bold text-[22px] tracking-tight text-white select-none">
-            Nex<span className="text-orange">Plumb</span>
-          </span>
-          <h2 className="font-display font-semibold text-[26px] text-white leading-tight mt-16 max-w-[280px]">
-            Join thousands of Lagos residents who book trusted artisans safely
-          </h2>
-        </div>
+      {/* LEFT PANEL: TRUST COLLATERAL */}
+      <div className="hidden md:flex md:w-[45%] relative bg-navy text-white flex-col justify-between p-12 overflow-hidden border-r border-white/10">
+        {/* Background Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal/20 via-navy to-orange/20 mix-blend-multiply opacity-80" />
+        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-teal/30 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] bg-orange/20 rounded-full blur-[120px]" />
+        
+        {/* Content */}
+        <div className="relative z-10 flex flex-col h-full justify-between">
+          <div>
+            <span className="font-display font-bold text-[24px] tracking-tight text-white select-none drop-shadow-md">
+              Nex<span className="text-orange">Plumb</span>
+            </span>
+            <h2 className="font-display font-bold text-[32px] text-white leading-tight mt-20 max-w-[340px]">
+              Join thousands of Lagos residents who book trusted artisans securely.
+            </h2>
+          </div>
 
-        <div className="flex flex-col gap-6 my-10">
-          <div className="flex gap-4 items-start">
-            <span className="p-1.5 bg-teal/15 rounded text-teal border border-teal/20">
-              <ShieldCheck size={18} />
-            </span>
-            <div>
-              <p className="font-display font-bold text-[14px] text-white leading-none">NIN-Verified Artisans Only</p>
-              <p className="font-body text-[13px] text-slate-light opacity-80 mt-1 max-w-[240px]">
-                Every plumber, electrician, and carpenter is identity vetted.
-              </p>
+          <div className="flex flex-col gap-8 my-12">
+            <div className="flex gap-5 items-start">
+              <span className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl text-teal border border-white/20 shadow-lg">
+                <ShieldCheck size={24} strokeWidth={2.5} />
+              </span>
+              <div>
+                <p className="font-display font-bold text-[16px] text-white leading-none tracking-wide">NIN-Verified Artisans Only</p>
+                <p className="font-body text-[14px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
+                  Every plumber, electrician, and carpenter is identity-vetted for your safety.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-5 items-start">
+              <span className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl text-orange border border-white/20 shadow-lg">
+                <Lock size={24} strokeWidth={2.5} />
+              </span>
+              <div>
+                <p className="font-display font-bold text-[16px] text-white leading-none tracking-wide">Escrow-Protected Payments</p>
+                <p className="font-body text-[14px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
+                  Artisans get paid ONLY after you confirm the job is 100% complete.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-5 items-start">
+              <span className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl text-amber border border-white/20 shadow-lg">
+                <Star size={24} strokeWidth={2.5} />
+              </span>
+              <div>
+                <p className="font-display font-bold text-[16px] text-white leading-none tracking-wide">4.8/5 Average Rating</p>
+                <p className="font-body text-[14px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
+                  Based on real, verified reviews from completed Lagos bookings.
+                </p>
+              </div>
             </div>
           </div>
-          <div className="flex gap-4 items-start">
-            <span className="p-1.5 bg-teal/15 rounded text-teal border border-teal/20">
-              <Lock size={18} />
-            </span>
-            <div>
-              <p className="font-display font-bold text-[14px] text-white leading-none">Escrow-Protected Payments</p>
-              <p className="font-body text-[13px] text-slate-light opacity-80 mt-1 max-w-[240px]">
-                Artisans get paid ONLY after you confirm the job is complete.
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-4 items-start">
-            <span className="p-1.5 bg-teal/15 rounded text-teal border border-teal/20">
-              <Star size={18} />
-            </span>
-            <div>
-              <p className="font-display font-bold text-[14px] text-white leading-none">4.8/5 Average Rating</p>
-              <p className="font-body text-[13px] text-slate-light opacity-80 mt-1 max-w-[240px]">
-                Based on real reviews from verified Lagos bookings.
-              </p>
-            </div>
-          </div>
-        </div>
 
-        <div className="text-[11px] font-mono text-slate-light opacity-50">
-          🔒 Secure and encrypted payments. NexPlumb © 2026.
+          <div className="text-[12px] font-mono text-white/50 tracking-wider">
+            🔒 Secure and encrypted • NexPlumb © 2026
+          </div>
         </div>
       </div>
 

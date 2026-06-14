@@ -44,6 +44,7 @@ export default function CustomerLogin() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting }
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -190,58 +191,77 @@ export default function CustomerLogin() {
     setFlow('login')
   }
 
+  const handleAutofillDemo = (type: 'customer' | 'artisan' | 'admin') => {
+    const phones = {
+      customer: '08080908908',
+      artisan: '08031234567',
+      admin: '08000000000'
+    }
+    setValue('phone', phones[type])
+    setValue('password', 'Password123')
+    toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} demo credentials filled! Click Log in.`)
+  }
+
   return (
     <div className="w-full flex-grow flex min-h-[calc(100vh-64px)] select-none">
       
       {/* LEFT PANEL: TRUST COLLATERAL */}
-      <div className="hidden md:flex md:w-[40%] bg-navy text-white flex-col justify-between p-10 border-r border-white/5">
-        <div>
-          <span className="font-display font-bold text-[22px] tracking-tight text-white select-none">
-            Nex<span className="text-orange">Plumb</span>
-          </span>
-          <h2 className="font-display font-semibold text-[26px] text-white leading-tight mt-16 max-w-[280px]">
-            Join thousands of Lagos residents who book trusted artisans safely
-          </h2>
-        </div>
+      <div className="hidden md:flex md:w-[45%] relative bg-navy text-white flex-col justify-between p-12 overflow-hidden border-r border-white/10">
+        {/* Background Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal/20 via-navy to-orange/20 mix-blend-multiply opacity-80" />
+        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-teal/30 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] bg-orange/20 rounded-full blur-[120px]" />
+        
+        {/* Content */}
+        <div className="relative z-10 flex flex-col h-full justify-between">
+          <div>
+            <span className="font-display font-bold text-[24px] tracking-tight text-white select-none drop-shadow-md">
+              Nex<span className="text-orange">Plumb</span>
+            </span>
+            <h2 className="font-display font-bold text-[32px] text-white leading-tight mt-20 max-w-[340px]">
+              Join thousands of Lagos residents who book trusted artisans securely.
+            </h2>
+          </div>
 
-        <div className="flex flex-col gap-6 my-10">
-          <div className="flex gap-4 items-start">
-            <span className="p-1.5 bg-teal/15 rounded text-teal border border-teal/20">
-              <ShieldCheck size={18} />
-            </span>
-            <div>
-              <p className="font-display font-bold text-[14px] text-white leading-none">NIN-Verified Artisans Only</p>
-              <p className="font-body text-[13px] text-slate-light opacity-80 mt-1 max-w-[240px]">
-                Every plumber, electrician, and carpenter is identity vetted.
-              </p>
+          <div className="flex flex-col gap-8 my-12">
+            <div className="flex gap-5 items-start">
+              <span className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl text-teal border border-white/20 shadow-lg">
+                <ShieldCheck size={24} strokeWidth={2.5} />
+              </span>
+              <div>
+                <p className="font-display font-bold text-[16px] text-white leading-none tracking-wide">NIN-Verified Artisans Only</p>
+                <p className="font-body text-[14px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
+                  Every plumber, electrician, and carpenter is identity-vetted for your safety.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-5 items-start">
+              <span className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl text-orange border border-white/20 shadow-lg">
+                <Lock size={24} strokeWidth={2.5} />
+              </span>
+              <div>
+                <p className="font-display font-bold text-[16px] text-white leading-none tracking-wide">Escrow-Protected Payments</p>
+                <p className="font-body text-[14px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
+                  Artisans get paid ONLY after you confirm the job is 100% complete.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-5 items-start">
+              <span className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl text-amber border border-white/20 shadow-lg">
+                <Star size={24} strokeWidth={2.5} />
+              </span>
+              <div>
+                <p className="font-display font-bold text-[16px] text-white leading-none tracking-wide">4.8/5 Average Rating</p>
+                <p className="font-body text-[14px] text-white/70 mt-2 max-w-[260px] leading-relaxed">
+                  Based on real, verified reviews from completed Lagos bookings.
+                </p>
+              </div>
             </div>
           </div>
-          <div className="flex gap-4 items-start">
-            <span className="p-1.5 bg-teal/15 rounded text-teal border border-teal/20">
-              <Lock size={18} />
-            </span>
-            <div>
-              <p className="font-display font-bold text-[14px] text-white leading-none">Escrow-Protected Payments</p>
-              <p className="font-body text-[13px] text-slate-light opacity-80 mt-1 max-w-[240px]">
-                Artisans get paid ONLY after you confirm the job is complete.
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-4 items-start">
-            <span className="p-1.5 bg-teal/15 rounded text-teal border border-teal/20">
-              <Star size={18} />
-            </span>
-            <div>
-              <p className="font-display font-bold text-[14px] text-white leading-none">4.8/5 Average Rating</p>
-              <p className="font-body text-[13px] text-slate-light opacity-80 mt-1 max-w-[240px]">
-                Based on real reviews from verified Lagos bookings.
-              </p>
-            </div>
-          </div>
-        </div>
 
-        <div className="text-[11px] font-mono text-slate-light opacity-50">
-          🔒 Secure and encrypted payments. NexPlumb © 2026.
+          <div className="text-[12px] font-mono text-white/50 tracking-wider">
+            🔒 Secure and encrypted • NexPlumb © 2026
+          </div>
         </div>
       </div>
 
@@ -319,17 +339,29 @@ export default function CustomerLogin() {
                 </Button>
               </form>
 
-              {/* Demo accounts reminder helper */}
-              <div className="mt-6 p-3 bg-lgray rounded-btn font-mono text-[11px] text-slate border border-border">
-                <p className="font-bold text-navy mb-1">💡 Demo login details:</p>
-                <p>• Customer: 08080908908 / Password123</p>
-                <p>• Artisan: 08031234567 / Password123</p>
-                <p>• Admin: 08000000000 / Password123</p>
+              {/* Demo Auto-fill Section */}
+              <div className="mt-8 flex flex-col gap-3">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="h-px flex-1 bg-border/60"></div>
+                  <span className="font-mono text-[10px] text-slate font-bold uppercase tracking-widest">Or use demo accounts</span>
+                  <div className="h-px flex-1 bg-border/60"></div>
+                </div>
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => handleAutofillDemo('customer')} className="flex-1 py-2 rounded-[8px] bg-sky-50 text-sky-700 text-[12px] font-display font-bold border border-sky-100 hover:bg-sky-100 transition-colors focus:outline-none">
+                    Customer
+                  </button>
+                  <button type="button" onClick={() => handleAutofillDemo('artisan')} className="flex-1 py-2 rounded-[8px] bg-orange-50 text-orange-700 text-[12px] font-display font-bold border border-orange-100 hover:bg-orange-100 transition-colors focus:outline-none">
+                    Artisan
+                  </button>
+                  <button type="button" onClick={() => handleAutofillDemo('admin')} className="flex-1 py-2 rounded-[8px] bg-violet-50 text-violet-700 text-[12px] font-display font-bold border border-violet-100 hover:bg-violet-100 transition-colors focus:outline-none">
+                    Admin
+                  </button>
+                </div>
               </div>
 
-              <p className="font-body text-[14px] text-slate mt-6 text-center select-none">
-                Don\'t have an account?{' '}
-                <Link href="/register" className="text-nxblue hover:underline font-bold">
+              <p className="font-body text-[14px] text-slate mt-8 text-center select-none">
+                Don't have an account?{' '}
+                <Link href="/register" className="text-nxblue hover:underline font-bold transition-colors">
                   Register
                 </Link>
               </p>
