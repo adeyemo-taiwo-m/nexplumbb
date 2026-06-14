@@ -9,7 +9,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
       <Input
         label={label}
         placeholder={placeholder}
-        prefixText="🇳🇬 +234 |"
+        prefixText="🇳🇬 +234"
         ref={ref}
         type="tel"
         inputMode="tel"

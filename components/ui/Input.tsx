@@ -76,8 +76,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     /* ── Disabled state ── */
     const disabledStyles = disabled ? 'opacity-50 cursor-not-allowed bg-lgray' : 'bg-white'
 
-    /* ── Padding calculation ── */
-    const leftPad = prefixIcon ? 'pl-11' : prefixText ? 'pl-[70px]' : 'pl-4'
+    /* ── Padding calculation (only used when no prefixText) ── */
+    const leftPad = prefixIcon ? 'pl-11' : prefixText ? 'pl-3' : 'pl-4'
     const rightPad = suffixIcon ? 'pr-11' : 'pr-4'
 
     return (
@@ -95,16 +95,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
 
         {/* Input container */}
-        <div className="relative flex items-center group">
-          {/* Left prefix text */}
+        <div className={`relative flex items-center group rounded-btn border transition-all duration-200 ease-out overflow-hidden ${borderState} ${disabledStyles}`}>
+
+          {/* Left prefix text — flex sibling, not absolute */}
           {prefixText && (
-            <div className="absolute left-4 font-mono text-[13px] text-slate border-r border-border pr-2.5 flex items-center h-full pointer-events-none select-none z-[1]">
+            <div className="flex items-center flex-shrink-0 pl-3.5 pr-2.5 border-r border-border h-full font-mono text-[13px] text-slate select-none pointer-events-none whitespace-nowrap">
               {prefixText}
             </div>
           )}
 
-          {/* Left prefix icon */}
-          {prefixIcon && (
+          {/* Left prefix icon — absolute only when no prefixText */}
+          {prefixIcon && !prefixText && (
             <div className={`absolute left-3.5 flex items-center pointer-events-none transition-colors duration-150 z-[1] ${
               error ? 'text-red-400' : focused ? 'text-teal' : 'text-slate/60'
             }`}>
@@ -122,20 +123,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             className={[
-              // Base
-              'w-full rounded-btn border font-mono text-body transition-all duration-200 ease-out',
-              'placeholder:text-slate/50 placeholder:font-mono',
+              // Base — no border/bg here; the wrapper div owns them
+              'flex-1 min-w-0 bg-transparent font-mono text-body transition-colors duration-200',
+              'placeholder:text-slate/40 placeholder:font-mono',
               'focus:outline-none',
-              // Size
+              // Size (height via wrapper, font via here)
               sizes[inputSize],
-              // Padding
-              leftPad,
-              rightPad,
-              // Border state
-              borderState,
-              // Disabled
-              disabledStyles,
-              // Custom
+              // Padding (left only when no prefix text)
+              prefixText ? 'pl-3 pr-3' : `${leftPad} ${rightPad}`,
+              // Remove border/bg — wrapper owns them
+              'border-0',
+              // Custom overrides
               className,
             ].join(' ')}
             {...props}
@@ -143,7 +141,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
           {/* Right suffix icon */}
           {suffixIcon && (
-            <div className={`absolute right-3.5 flex items-center pointer-events-auto transition-colors duration-150 ${
+            <div className={`flex items-center pr-3.5 flex-shrink-0 pointer-events-auto transition-colors duration-150 ${
               error ? 'text-red-400' : focused ? 'text-teal' : 'text-slate/60'
             }`}>
               {suffixIcon}
@@ -152,7 +150,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
           {/* Animated bottom highlight bar */}
           <span
-            className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] rounded-full transition-all duration-300 ease-out ${
+            className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] rounded-full transition-all duration-300 ease-out pointer-events-none ${
               error
                 ? 'w-full bg-red-500'
                 : focused
