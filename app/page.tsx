@@ -23,6 +23,7 @@ import EscrowExplainer from "@/components/homepage/EscrowExplainer";
 import ServicesCatalogue from "@/components/homepage/ServicesCatalogue";
 import TrustStack from "@/components/homepage/TrustStack";
 import SocialProof from "@/components/homepage/SocialProof";
+import HeroSearchBar from "@/components/homepage/HeroSearchBar";
 import ArtisanCTA from "@/components/homepage/ArtisanCTA";
 import TradesBrowser from "@/components/homepage/TradesBrowser";
 
@@ -71,14 +72,12 @@ export default function Homepage() {
 
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Mock successful reverse-geocoding to Surulere for testing
           setTimeout(() => {
             setLocationStatus("detected");
             setLocationName("Surulere");
           }, 1200);
         },
         (error) => {
-          // Geolocation blocked or failed
           setTimeout(() => {
             setLocationStatus("denied");
             setLocationName("Lagos");
@@ -89,7 +88,7 @@ export default function Homepage() {
     }
   }, [mounted]);
 
-  // Featured Artisans fetch simulator based on selected location
+  // Featured Artisans fetch simulator
   useEffect(() => {
     if (mounted) {
       setLoadingArtisans(true);
@@ -97,8 +96,6 @@ export default function Homepage() {
 
       const timer = setTimeout(() => {
         try {
-          // If we want to simulate a rare API failure, we can handle it here.
-          // In regular usage, we filter the mock DB.
           let filtered = dbArtisans;
           if (locationName !== "Lagos") {
             filtered = dbArtisans.filter(
@@ -106,8 +103,6 @@ export default function Homepage() {
                 artisan.area.toLowerCase() === locationName.toLowerCase(),
             );
           }
-
-          // Limit to 4 featured artisans
           setFeaturedArtisans(filtered.slice(0, 4));
           setLoadingArtisans(false);
         } catch (err) {
@@ -148,14 +143,12 @@ export default function Homepage() {
     );
   }
 
-  // Trust Metrics (exactly 3 as specified)
   const trustMetrics = [
     { icon: ShieldCheck, value: "1,200+", label: "Verified Artisans" },
     { icon: Lock, value: "Escrow", label: "Protected Payments" },
     { icon: Star, value: "4.8 / 5", label: "Average Rating" },
   ];
 
-  // How It Works Steps
   const steps = [
     {
       number: 1,
@@ -208,7 +201,7 @@ export default function Homepage() {
       <main className="flex-grow flex flex-col">
         {/* ══════════════ SECTION 1: HERO ══════════════ */}
         <section className="w-full bg-navy text-white min-h-[580px] relative overflow-hidden flex items-center">
-          {/* Subtle Ambient Decorative Glows */}
+          {/* Ambient Glows */}
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal/5 rounded-full blur-[140px] pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange/5 rounded-full blur-[140px] pointer-events-none" />
 
@@ -230,39 +223,20 @@ export default function Homepage() {
                 </span>
               </h1>
 
-              {/* Subheadline (with Lagos keyword for SEO) */}
+              {/* Subheadline */}
               <p className="font-body text-[18px] text-white/80 mt-4 max-w-[520px] leading-relaxed animate-fade-in-up delay-200">
                 Find verified plumbers, electricians, and tradespeople near you
                 in Lagos — instantly
               </p>
 
-              {/* Search Bar (White Card style) */}
-              <form
-                onSubmit={handleSearch}
-                className="w-full max-w-[640px] bg-white rounded-card shadow-modal mt-10 p-2 flex gap-2 items-center relative animate-fade-in-up delay-300 border border-transparent focus-within:border-teal focus-within:shadow-[0_0_0_3px_rgba(42,157,143,0.12)] transition-all duration-200"
-              >
-                <div className="flex-1 flex items-center gap-2 px-3">
-                  <Search size={18} className="text-slate" />
-                  <input
-                    type="text"
-                    placeholder="What do you need? e.g. leaking pipe, electrical fault..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-transparent text-body font-mono text-[14px] placeholder:text-slate !outline-none border-0"
-                    required
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="md"
-                  className="w-32 flex-shrink-0"
-                >
-                  Search
-                </Button>
-              </form>
+              {/* ── FIXED SEARCH BAR ── */}
+              <HeroSearchBar
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                handleSearch={handleSearch}
+              />
 
-              {/* Location Selector (under search bar) */}
+              {/* Location Selector */}
               <div className="mt-3 flex items-center gap-2 font-mono text-[12px] text-white/70 relative">
                 <span>📍</span>
                 {locationStatus === "detecting" ? (
@@ -306,7 +280,7 @@ export default function Homepage() {
                         type="button"
                         onClick={() => {
                           setLocationName("Lagos");
-                          setLocationStatus("denied"); // Default to Lagos wide
+                          setLocationStatus("denied");
                           setShowLocationDropdown(false);
                         }}
                         className="w-full text-left px-4 py-2 hover:bg-lgray transition-colors font-bold text-navy"
@@ -357,14 +331,12 @@ export default function Homepage() {
             {/* Right Column Illustration (45%, Desktop Only) */}
             <div className="hidden tablet:block desktop:col-span-5 relative justify-center items-center">
               <div className="w-full max-w-[420px] mx-auto animate-fade-in-up delay-300">
-                {/* Visual Graphic Representation of Nigerian Home Scene & Shield */}
                 <svg
                   viewBox="0 0 400 400"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-full h-auto drop-shadow-2xl"
                 >
-                  {/* Decorative background grid and circles */}
                   <circle
                     cx="200"
                     cy="200"
@@ -381,8 +353,6 @@ export default function Homepage() {
                     strokeDasharray="6 6"
                     className="animated-dashed"
                   />
-
-                  {/* Modern Room elements: Couch shape */}
                   <rect
                     x="90"
                     y="240"
@@ -401,7 +371,6 @@ export default function Homepage() {
                     rx="8"
                     fill="#0D2137"
                   />
-                  {/* Plant decoration */}
                   <path
                     d="M 70 310 Q 50 240 85 200 Q 110 240 70 310"
                     fill="url(#plant-grad)"
@@ -409,8 +378,6 @@ export default function Homepage() {
                     className="animated-plant"
                   />
                   <circle cx="75" cy="300" r="10" fill="#E76F51" />
-
-                  {/* Escrow Shield Symbol floating */}
                   <g filter="url(#shield-shadow)" className="animated-shield">
                     <path
                       d="M 200 80 Q 250 80 270 120 Q 270 190 200 230 Q 130 190 130 120 Q 150 80 200 80 Z"
@@ -418,7 +385,6 @@ export default function Homepage() {
                       stroke="#FFFFFF"
                       strokeWidth="3"
                     />
-                    {/* Checkmark inside shield */}
                     <path
                       d="M 180 155 L 195 170 L 225 130"
                       stroke="#FFFFFF"
@@ -428,8 +394,6 @@ export default function Homepage() {
                       className="animated-checkmark"
                     />
                   </g>
-
-                  {/* Floating badge for Verified */}
                   <g transform="translate(260, 240)">
                     <g className="animated-badge-right">
                       <rect
@@ -455,8 +419,6 @@ export default function Homepage() {
                       </text>
                     </g>
                   </g>
-
-                  {/* Floating badge for Escrow */}
                   <g transform="translate(30, 130)">
                     <g className="animated-badge-left">
                       <rect
@@ -482,8 +444,6 @@ export default function Homepage() {
                       </text>
                     </g>
                   </g>
-
-                  {/* Gradients and Keyframe styles */}
                   <defs>
                     <style>{`
                       @keyframes float {
@@ -514,7 +474,6 @@ export default function Homepage() {
                         from { stroke-dashoffset: 80; }
                         to { stroke-dashoffset: 0; }
                       }
-
                       .animated-shield {
                         animation: float 5s ease-in-out infinite, pulse-glow 3.5s ease-in-out infinite;
                         transform-origin: 200px 155px;
@@ -613,12 +572,9 @@ export default function Homepage() {
           className="bg-white py-20 border-b border-border"
         >
           <div className="max-w-[1200px] mx-auto px-6 tablet:px-10 text-center">
-            {/* Title */}
             <h2 className="text-h2 font-display font-bold text-navy text-center mb-12">
               Book a trusted artisan in 3 steps
             </h2>
-
-            {/* Steps Layout */}
             <div className="grid grid-cols-1 tablet:grid-cols-3 gap-8 text-left">
               {steps.map((step) => {
                 const Icon = step.icon;
@@ -627,20 +583,15 @@ export default function Homepage() {
                     key={step.number}
                     className="flex flex-col items-start p-6 rounded-card border border-border bg-lgray/10 hover:border-teal/30 hover:shadow-card transition-all duration-200"
                   >
-                    {/* Icon & Number Header */}
                     <div className="flex items-center justify-between w-full mb-6">
-                      {/* Icon */}
                       <Icon size={40} className="text-teal" />
-                      {/* Circle Number */}
                       <div className="w-10 h-10 bg-orange text-white rounded-full font-bold text-[16px] flex items-center justify-center shadow-md">
                         {step.number}
                       </div>
                     </div>
-                    {/* Title */}
                     <h3 className="text-h3 font-display font-semibold text-navy">
                       {step.title}
                     </h3>
-                    {/* Description */}
                     <p className="font-body text-[14px] text-slate mt-2 leading-relaxed">
                       {step.description}
                     </p>
@@ -648,8 +599,6 @@ export default function Homepage() {
                 );
               })}
             </div>
-
-            {/* CTA button */}
             <div className="mt-12 text-center">
               <Link href="/search">
                 <Button variant="primary" size="md" className="px-8 font-bold">
@@ -663,7 +612,6 @@ export default function Homepage() {
         {/* ══════════════ SECTION 4: FEATURED ARTISANS ══════════════ */}
         <section className="w-full bg-lgray py-20 border-b border-border">
           <div className="max-w-[1200px] mx-auto px-6 tablet:px-10">
-            {/* Header row */}
             <div className="flex items-end justify-between mb-8">
               <div className="text-left">
                 <h2 className="text-h2 font-display font-bold text-navy leading-tight">
@@ -683,9 +631,7 @@ export default function Homepage() {
               </Link>
             </div>
 
-            {/* Content States */}
             {loadingArtisans ? (
-              /* Loading Skeletons */
               <div className="grid grid-cols-1 sm:grid-cols-2 desktop:grid-cols-4 gap-6">
                 {Array.from({ length: 4 }).map((_, idx) => (
                   <div
@@ -700,12 +646,10 @@ export default function Homepage() {
                 ))}
               </div>
             ) : apiError ? (
-              /* API Error Graceful Fallback (hides content grid, shows subtle retry) */
               <div className="py-4 text-center text-slate font-mono text-[13px]">
                 Unable to load artisans. Try searching above.
               </div>
             ) : featuredArtisans.length === 0 ? (
-              /* No Artisans / Waitlist State */
               <div className="bg-white border border-border rounded-card p-10 text-center max-w-[600px] mx-auto shadow-card">
                 <p className="font-display font-bold text-navy text-[16px] mb-2">
                   Coming soon — artisans signing up now in {locationName}
@@ -726,9 +670,7 @@ export default function Homepage() {
                 </Button>
               </div>
             ) : (
-              /* Grid layouts */
               <div>
-                {/* Desktop/Tablet Grid */}
                 <div className="hidden sm:grid sm:grid-cols-2 desktop:grid-cols-4 gap-6">
                   {featuredArtisans.map((artisan) => (
                     <ArtisanCard
@@ -738,8 +680,6 @@ export default function Homepage() {
                     />
                   ))}
                 </div>
-
-                {/* Mobile Horizontal Scroll */}
                 <div className="sm:hidden overflow-x-auto pb-4 flex gap-4 w-full scrollbar-hide">
                   {featuredArtisans.map((artisan) => (
                     <div
@@ -755,7 +695,7 @@ export default function Homepage() {
           </div>
         </section>
 
-        {/* ══════════════ SECTIONS 5-10: AMENDED HOMEPAGE SECTIONS ══════════════ */}
+        {/* ══════════════ SECTIONS 5-10 ══════════════ */}
         <EscrowExplainer />
         <ServicesCatalogue />
         <TrustStack />
