@@ -9,10 +9,8 @@ import {
   ShieldCheck,
   Lock,
   Star,
-  ArrowRight,
   Zap,
   CheckCircle,
-  HelpCircle,
 } from "lucide-react";
 import { useMockDb, Artisan } from "@/lib/store/mockDb";
 import ArtisanCard from "@/components/ui/ArtisanCard";
@@ -21,6 +19,12 @@ import CustomerNavbar from "@/components/layout/CustomerNavbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import { toast } from "sonner";
+import EscrowExplainer from "@/components/homepage/EscrowExplainer";
+import ServicesCatalogue from "@/components/homepage/ServicesCatalogue";
+import TrustStack from "@/components/homepage/TrustStack";
+import SocialProof from "@/components/homepage/SocialProof";
+import ArtisanCTA from "@/components/homepage/ArtisanCTA";
+import TradesBrowser from "@/components/homepage/TradesBrowser";
 
 export default function Homepage() {
   const router = useRouter();
@@ -163,67 +167,6 @@ export default function Homepage() {
       icon: MapPin,
       title: "Track & confirm",
       description: "Watch your artisan travel to you on a live map. Confirm when the job is complete and release payment."
-    },
-  ];
-
-  // Category SEO Configuration
-  const seoSections = [
-    {
-      id: "plumbers-in-lagos",
-      title: "Plumbers in Lagos",
-      desc: "Find verified, NIN-checked plumbers near you in Lagos. Escrow-protected payments.",
-      trade: "Plumbing",
-      label: "plumbing",
-    },
-    {
-      id: "electricians-in-lagos",
-      title: "Electricians in Lagos",
-      desc: "Find verified, NIN-checked electricians near you in Lagos. Escrow-protected payments.",
-      trade: "Electrical",
-      label: "electrical",
-    },
-    {
-      id: "carpenters-in-lagos",
-      title: "Carpenters in Lagos",
-      desc: "Find verified, NIN-checked carpenters near you in Lagos. Escrow-protected payments.",
-      trade: "Carpentry",
-      label: "carpentry",
-    },
-    {
-      id: "painters-in-lagos",
-      title: "Painters in Lagos",
-      desc: "Find verified, NIN-checked painters near you in Lagos. Escrow-protected payments.",
-      trade: "Painting",
-      label: "painting",
-    },
-    {
-      id: "tilers-in-lagos",
-      title: "Tilers in Lagos",
-      desc: "Find verified, NIN-checked tilers near you in Lagos. Escrow-protected payments.",
-      trade: "Tiling",
-      label: "tiling",
-    },
-  ];
-
-  // Social Proof Reviews
-  const socialProofReviews = [
-    {
-      name: "Chisom",
-      area: "Surulere",
-      stars: 5,
-      text: "Nexplumb completely saved my day! A kitchen pipe burst at 9:00 AM. I booked Emeka, tracked him, and by 11:30 AM the pipe was replaced. The escrow system felt super secure!",
-    },
-    {
-      name: "Kunle",
-      area: "Yaba",
-      stars: 5,
-      text: "Very smooth experience. Babatunde was professional, did neat wiring, and cleared up afterwards. Love that I can pay securely and have funds held in escrow until completion.",
-    },
-    {
-      name: "Nkechi",
-      area: "Lekki",
-      stars: 5,
-      text: "Having a verified artisan come into my home makes me feel safe. Knowing their NIN has been checked by Nexplumb is a game changer for home repairs in Lagos.",
     },
   ];
 
@@ -398,17 +341,17 @@ export default function Homepage() {
                 >
                   {/* Decorative background grid and circles */}
                   <circle cx="200" cy="200" r="180" fill="url(#hero-circle-grad)" />
-                  <circle cx="200" cy="200" r="140" fill="none" stroke="rgba(42, 157, 143, 0.15)" strokeWidth="1.5" strokeDasharray="6 6" />
+                  <circle cx="200" cy="200" r="140" fill="none" stroke="rgba(42, 157, 143, 0.15)" strokeWidth="1.5" strokeDasharray="6 6" className="animated-dashed" />
                   
                   {/* Modern Room elements: Couch shape */}
                   <rect x="90" y="240" width="220" height="70" rx="14" fill="#122A44" stroke="rgba(255,255,255,0.08)" strokeWidth="2" />
                   <rect x="110" y="220" width="180" height="40" rx="8" fill="#0D2137" />
                   {/* Plant decoration */}
-                  <path d="M 70 310 Q 50 240 85 200 Q 110 240 70 310" fill="url(#plant-grad)" opacity="0.85" />
+                  <path d="M 70 310 Q 50 240 85 200 Q 110 240 70 310" fill="url(#plant-grad)" opacity="0.85" className="animated-plant" />
                   <circle cx="75" cy="300" r="10" fill="#E76F51" />
 
                   {/* Escrow Shield Symbol floating */}
-                  <g filter="url(#shield-shadow)">
+                  <g filter="url(#shield-shadow)" className="animated-shield">
                     <path
                       d="M 200 80 Q 250 80 270 120 Q 270 190 200 230 Q 130 190 130 120 Q 150 80 200 80 Z"
                       fill="#2A9D8F"
@@ -422,25 +365,85 @@ export default function Homepage() {
                       strokeWidth="4"
                       strokeLinecap="round"
                       strokeLinejoin="round"
+                      className="animated-checkmark"
                     />
                   </g>
 
                   {/* Floating badge for Verified */}
                   <g transform="translate(260, 240)">
-                    <rect x="0" y="0" width="110" height="36" rx="18" fill="rgba(13,33,55,0.9)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
-                    <circle cx="18" cy="18" r="8" fill="#2E86AB" />
-                    <text x="34" y="22" fill="#FFFFFF" fontSize="10" fontFamily="Sora, sans-serif" fontWeight="bold">NIN Vetted</text>
+                    <g className="animated-badge-right">
+                      <rect x="0" y="0" width="110" height="36" rx="18" fill="rgba(13,33,55,0.9)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                      <circle cx="18" cy="18" r="8" fill="#2E86AB" />
+                      <text x="34" y="22" fill="#FFFFFF" fontSize="10" fontFamily="Sora, sans-serif" fontWeight="bold">NIN Vetted</text>
+                    </g>
                   </g>
 
                   {/* Floating badge for Escrow */}
                   <g transform="translate(30, 130)">
-                    <rect x="0" y="0" width="100" height="36" rx="18" fill="rgba(13,33,55,0.9)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
-                    <circle cx="18" cy="18" r="8" fill="#E76F51" />
-                    <text x="34" y="22" fill="#FFFFFF" fontSize="10" fontFamily="Sora, sans-serif" fontWeight="bold">Escrow Safe</text>
+                    <g className="animated-badge-left">
+                      <rect x="0" y="0" width="100" height="36" rx="18" fill="rgba(13,33,55,0.9)" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                      <circle cx="18" cy="18" r="8" fill="#E76F51" />
+                      <text x="34" y="22" fill="#FFFFFF" fontSize="10" fontFamily="Sora, sans-serif" fontWeight="bold">Escrow Safe</text>
+                    </g>
                   </g>
 
-                  {/* Gradients */}
+                  {/* Gradients and Keyframe styles */}
                   <defs>
+                    <style>{`
+                      @keyframes float {
+                        0%, 100% { transform: translateY(0px); }
+                        50% { transform: translateY(-8px); }
+                      }
+                      @keyframes rotate-dashed {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                      }
+                      @keyframes pulse-glow {
+                        0%, 100% { filter: drop-shadow(0 0 4px rgba(42, 157, 143, 0.3)); }
+                        50% { filter: drop-shadow(0 0 14px rgba(42, 157, 143, 0.75)); }
+                      }
+                      @keyframes sway {
+                        0%, 100% { transform: rotate(0deg); }
+                        50% { transform: rotate(-3deg); }
+                      }
+                      @keyframes bob-right {
+                        0%, 100% { transform: translateY(0); }
+                        50% { transform: translateY(-4px); }
+                      }
+                      @keyframes bob-left {
+                        0%, 100% { transform: translateY(0); }
+                        50% { transform: translateY(4px); }
+                      }
+                      @keyframes draw-check {
+                        from { stroke-dashoffset: 80; }
+                        to { stroke-dashoffset: 0; }
+                      }
+
+                      .animated-shield {
+                        animation: float 5s ease-in-out infinite, pulse-glow 3.5s ease-in-out infinite;
+                        transform-origin: 200px 155px;
+                      }
+                      .animated-dashed {
+                        animation: rotate-dashed 30s linear infinite;
+                        transform-origin: 200px 200px;
+                      }
+                      .animated-plant {
+                        animation: sway 7s ease-in-out infinite;
+                        transform-origin: 75px 300px;
+                      }
+                      .animated-badge-right {
+                        animation: bob-right 4s ease-in-out infinite;
+                      }
+                      .animated-badge-left {
+                        animation: bob-left 4.2s ease-in-out infinite;
+                      }
+                      .animated-checkmark {
+                        stroke-dasharray: 80;
+                        stroke-dashoffset: 80;
+                        animation: draw-check 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+                        animation-delay: 0.5s;
+                      }
+                    `}</style>
                     <linearGradient id="hero-circle-grad" x1="200" y1="20" x2="200" y2="380" gradientUnits="userSpaceOnUse">
                       <stop stopColor="rgba(42, 157, 143, 0.08)" />
                       <stop offset="1" stopColor="rgba(231, 111, 81, 0.03)" />
@@ -462,7 +465,7 @@ export default function Homepage() {
 
         {/* ══════════════ SECTION 2: TRUST BAR ══════════════ */}
         <section className="w-full bg-navy/95 border-t border-white/10 py-6">
-          <div className="max-w-[1200px] mx-auto px-6 flex flex-row flex-wrap justify-center gap-16 tablet:gap-8 mobile:flex-col mobile:items-center mobile:gap-4">
+          <div className="max-w-[1200px] mx-auto px-6 flex flex-col items-center gap-6 tablet:flex-row tablet:justify-center tablet:gap-12 desktop:gap-20">
             {trustMetrics.map((metric, idx) => {
               const Icon = metric.icon;
               return (
@@ -623,116 +626,13 @@ export default function Homepage() {
           </div>
         </section>
 
-        {/* ══════════════ SECTION 5: CATEGORY SEO SECTIONS ══════════════ */}
-        {seoSections.map((sec, index) => {
-          // Filter first 3 matching artisans for this trade
-          const matchingArtisans = dbArtisans
-            .filter((a) => a.trade.toLowerCase() === sec.trade.toLowerCase())
-            .slice(0, 3);
-
-          return (
-            <section
-              key={sec.id}
-              id={sec.id}
-              className={`w-full py-20 border-b border-border ${
-                index % 2 === 0 ? "bg-white" : "bg-lgray"
-              }`}
-            >
-              <div className="max-w-[1200px] mx-auto px-6 tablet:px-10">
-                <div className="max-w-[700px] text-left mb-10">
-                  {/* H2 Title with Trade + City */}
-                  <h2 className="text-h2 font-display font-bold text-navy">
-                    {sec.title}
-                  </h2>
-                  <p className="font-body text-[16px] text-slate mt-2 leading-relaxed">
-                    {sec.desc}
-                  </p>
-                </div>
-
-                {/* 3 Artisan Grid Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                  {matchingArtisans.length === 0 ? (
-                    <div className="col-span-3 py-10 bg-white/40 border border-border border-dashed rounded-card text-center text-slate font-body text-[14px]">
-                      Onboarding verified local {sec.label}s near you...
-                    </div>
-                  ) : (
-                    matchingArtisans.map((artisan) => (
-                      <ArtisanCard
-                        key={artisan.id}
-                        variant="vertical"
-                        {...artisan}
-                      />
-                    ))
-                  )}
-                </div>
-
-                <div className="mt-8 text-left">
-                  <Link
-                    href={`/search?category=${sec.label}`}
-                    className="font-mono text-[13px] font-bold text-nxblue hover:underline inline-flex items-center gap-1.5 group select-none"
-                  >
-                    Find more {sec.label}s near you{" "}
-                    <ArrowRight
-                      size={14}
-                      className="group-hover:translate-x-1 transition-transform"
-                    />
-                  </Link>
-                </div>
-              </div>
-            </section>
-          );
-        })}
-
-        {/* ══════════════ SECTION 6: SOCIAL PROOF ══════════════ */}
-        <section className="w-full bg-white py-20">
-          <div className="max-w-[1200px] mx-auto px-6 tablet:px-10 text-center">
-            {/* Title */}
-            <span className="inline-block font-mono text-[11px] font-bold text-teal uppercase tracking-widest mb-3">
-              Testimonials
-            </span>
-            <h2 className="text-h2 font-display font-bold text-navy mb-12">
-              What Lagos residents say
-            </h2>
-
-            {/* Grid Layout (3 cards) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-              {socialProofReviews.map((rev, idx) => (
-                <div
-                  key={idx}
-                  className="bg-lgray rounded-card p-6 border border-border shadow-card flex flex-col justify-between hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  <div>
-                    {/* Stars */}
-                    <div className="flex items-center gap-0.5 text-amber mb-4 select-none">
-                      {Array.from({ length: rev.stars }).map((_, i) => (
-                        <Star key={i} size={14} className="fill-current" />
-                      ))}
-                    </div>
-                    {/* Review text */}
-                    <p className="font-body text-[14px] text-body italic leading-relaxed">
-                      &ldquo;{rev.text}&rdquo;
-                    </p>
-                  </div>
-
-                  {/* Profile info footer */}
-                  <div className="mt-6 flex items-center gap-3 border-t border-border pt-4">
-                    <div className="w-9 h-9 bg-navy text-white rounded-full font-display font-bold text-[13px] flex items-center justify-center select-none uppercase">
-                      {rev.name[0]}
-                    </div>
-                    <div className="text-left">
-                      <h4 className="font-display font-bold text-[13px] text-navy leading-none">
-                        {rev.name}
-                      </h4>
-                      <p className="font-mono text-[10px] text-slate mt-1">
-                        {rev.area}, Lagos
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ══════════════ SECTIONS 5-10: AMENDED HOMEPAGE SECTIONS ══════════════ */}
+        <EscrowExplainer />
+        <ServicesCatalogue />
+        <TrustStack />
+        <SocialProof />
+        <ArtisanCTA />
+        <TradesBrowser />
       </main>
 
       <Footer />
